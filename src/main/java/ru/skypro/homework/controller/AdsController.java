@@ -27,7 +27,7 @@ public class AdsController {
 
     /**
      * Получение всех объявлений
-     * @returnResponseEntity<AdsDto>
+     * @return ResponseEntity<AdsDto>
      */
     @GetMapping("/ads")
     public ResponseEntity<AdsDto> getAds() {
@@ -67,7 +67,7 @@ public class AdsController {
      * Обновление картинки объявления
      * @param adId
      * @param image
-     * @return
+     * @return ResponseEntity<CreateOrUpdateAdDto
      */
     @PatchMapping("/ads/{id}/image")
     public ResponseEntity<CreateOrUpdateAdDto> editAdImage(@PathVariable Integer adId
