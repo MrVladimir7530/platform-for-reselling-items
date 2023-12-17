@@ -6,10 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.dto.AdDto;
-import ru.skypro.homework.dto.AdsDto;
-import ru.skypro.homework.dto.CommentDto;
-import ru.skypro.homework.dto.CreateOrUpdateAdDto;
+import ru.skypro.homework.dto.*;
 
 @Slf4j
 @RestController
@@ -39,10 +36,20 @@ public class AdsController {
 
     /**
      * Получение объявлений авторизованного пользователя
-     * @return
+     * @return ResponseEntity<AdsDto>
      */
     @GetMapping("/ads/me")
     public ResponseEntity<AdsDto> getMyAds() {
+        return null;
+    }
+
+    /**
+     * Получение информации об объявлении
+     * @param adId
+     * @return ResponseEntity<ExtendedAdDto>
+     */
+    @GetMapping("/ads/{id}")
+    public ResponseEntity<ExtendedAdDto> getAdInfo(@PathVariable Integer adId) {
         return null;
     }
 
