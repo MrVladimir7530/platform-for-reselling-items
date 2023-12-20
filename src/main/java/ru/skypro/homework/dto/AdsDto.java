@@ -6,5 +6,5 @@ import java.util.List;
 @Data
 public class AdsDto {
     private Integer count;
-    private List<AdDto> adDtoList;
+    private List<AdDto> results;
 }
