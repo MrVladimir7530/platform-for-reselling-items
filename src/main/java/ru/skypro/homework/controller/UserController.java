@@ -9,7 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UpdateUserDto;
 import ru.skypro.homework.dto.UserDto;
-import ru.skypro.homework.mapper.UserMapper;
+import ru.skypro.homework.service.UserService;
+
+import java.security.Principal;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -17,18 +19,21 @@ import ru.skypro.homework.mapper.UserMapper;
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
-
+    private final UserService userService;
 
     @PostMapping("/set_password")
-    public ResponseEntity<Void> setPassword(@RequestBody NewPasswordDto newPasswordDto) {
-        //todo дописать метод setPassword
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> setPassword(@RequestBody NewPasswordDto newPasswordDto, Principal principal) {
+        if (userService.setPassword(newPasswordDto, principal)) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping("/me")
     public ResponseEntity<UserDto> getInfoUser() {
         //todo дописать метод getInfoUser
-        return UserMapper.INSTANCE.toDTO();
+//        return UserMapper.INSTANCE.toUserDto();
+        return null;
     }
 
     @PatchMapping("/me")
