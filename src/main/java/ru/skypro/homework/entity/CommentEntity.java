@@ -4,12 +4,11 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.Objects;
 
 @Data
 @Entity
 @Table(name = "comments", schema = "public", catalog = "platformForResellingItems")
-public class CommentsEntity {
+public class CommentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private int pk;
@@ -18,6 +17,6 @@ public class CommentsEntity {
     private String text;
     @ManyToOne
     @JoinColumn(name = "author_id", referencedColumnName = "id")
-    private UsersEntity usersByAuthorId;
+    private UserEntity usersByAuthorId;
 
 }

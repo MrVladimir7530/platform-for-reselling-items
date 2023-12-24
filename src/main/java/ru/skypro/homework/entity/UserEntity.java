@@ -3,13 +3,11 @@ package ru.skypro.homework.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Objects;
 
 @Data
 @Entity
 @Table(name = "users", schema = "public", catalog = "platformForResellingItems")
-public class UsersEntity {
+public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private int id;

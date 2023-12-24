@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UpdateUserDto;
 import ru.skypro.homework.dto.UserDto;
+import ru.skypro.homework.mapper.UserMapper;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -27,7 +28,7 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<UserDto> getInfoUser() {
         //todo дописать метод getInfoUser
-        return null;
+        return UserMapper.INSTANCE.toDTO();
     }
 
     @PatchMapping("/me")
