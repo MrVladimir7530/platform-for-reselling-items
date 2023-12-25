@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.dto.CommentsDto;
+import ru.skypro.homework.dto.CreateOrUpdateCommentDto;
 
 @Slf4j
 @RestController
@@ -15,17 +16,19 @@ public class CommentController {
     /**
      * Создание коментария. Аргументы: Id объявления и текст комментария.
      * @param adId
-     * @param comment
+     * @param  createOrUpdateCommentDto
      * @return ResponseEntity<CommentDto>
      */
     //todo дописать метод контроллера
     @PostMapping("/ads/{id}/comments")
-    public ResponseEntity<CommentDto> createComment(@PathVariable Integer adId, @RequestParam String comment) {
+    public ResponseEntity<CommentDto> createComment(@PathVariable Integer adId
+            , @RequestBody CreateOrUpdateCommentDto createOrUpdateCommentDto) {
+
         return null;
     }
 
     /**
-     * Получение комментариев обьявления. На входе Id обьявления
+     * Получение комментариев обьявления. Аргумент: Id обьявления
      * @param adId
      * @return ResponseEntity<CommentsDto>
      */
@@ -39,11 +42,13 @@ public class CommentController {
      * Обновление комментария. Аргументы: Id объявления, Id комментария
      * @param adId
      * @param commentId
+     * @param  createOrUpdateCommentDto
      * @return ResponseEntity<CommentDto>
      */
     //todo дописать метод контроллера
     @PatchMapping("/ads/{adId}/comments/{commentId}")
-    public ResponseEntity<CommentDto> editComment(@PathVariable Integer adId, @PathVariable Integer commentId) {
+    public ResponseEntity<CommentDto> editComment(@PathVariable Integer adId, @PathVariable Integer commentId
+            , @RequestBody CreateOrUpdateCommentDto createOrUpdateCommentDto ) {
         return null;
     }
 
