@@ -32,7 +32,7 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<UserDto> getInfoUser() {
         //todo дописать метод getInfoUser
-//        return UserMapper.INSTANCE.toUserDto();
+
         return null;
     }
 
