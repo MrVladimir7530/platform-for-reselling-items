@@ -10,6 +10,6 @@ import java.security.Principal;
 public interface UserService {
     boolean setPassword(NewPasswordDto newPasswordDto, Principal principal);
     UserDto getInfoUser(Principal principal);
-    UpdateUserDto updateInfoUser(UpdateUserDto updateUserDto);
-    void updateAvatarUser(MultipartFile image);
+    UpdateUserDto updateInfoUser(UpdateUserDto updateUserDto, Principal principal);
+    void updateAvatarUser(MultipartFile image, Principal principal);
 }

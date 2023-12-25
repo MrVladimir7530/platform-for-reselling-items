@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UpdateUserDto;
 import ru.skypro.homework.dto.UserDto;
+import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.service.UserService;
 
 import java.security.Principal;
@@ -37,13 +38,13 @@ public class UserController {
     }
 
     @PatchMapping("/me")
-    public ResponseEntity<UpdateUserDto> updateInfoUser(@RequestBody UpdateUserDto updateUserDto) {
-        //todo дописать метод updateInfoUser
-        return null;
+    public ResponseEntity<UpdateUserDto> updateInfoUser(@RequestBody UpdateUserDto updateUserDto, Principal principal) {
+        UpdateUserDto userDto = userService.updateInfoUser(updateUserDto, principal);
+        return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 
     @PatchMapping("/me/image")
-    public ResponseEntity<Void> updateAvatarUser(@RequestParam MultipartFile image) {
+    public ResponseEntity<Void> updateAvatarUser(@RequestParam MultipartFile image, Principal principal) {
         //todo дописать метод updateAvatarUser
         return null;
     }

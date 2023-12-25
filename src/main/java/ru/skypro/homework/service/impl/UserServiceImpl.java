@@ -1,6 +1,7 @@
 package ru.skypro.homework.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.Mapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDto;
@@ -37,12 +38,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UpdateUserDto updateInfoUser(UpdateUserDto updateUserDto) {
-        return null;
+    public UpdateUserDto updateInfoUser(UpdateUserDto updateUserDto, Principal principal) {
+        String name = principal.getName();
+        UserEntity user = userRepository.findByUsername(name);
+        UpdateUserDto oldUserDto = UserMapper.INSTANCE.toUpdateUserDto(user);
+        user.setFirstName(updateUserDto.getFirstName());
+        user.setLastName(updateUserDto.getLastName());
+        user.setPhone(updateUserDto.getPhone());
+        userRepository.save(user);
+        return oldUserDto;
     }
 
     @Override
-    public void updateAvatarUser(MultipartFile image) {
+    public void updateAvatarUser(MultipartFile image, Principal principal) {
 
     }
 }
