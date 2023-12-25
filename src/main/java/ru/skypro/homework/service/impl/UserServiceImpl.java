@@ -7,6 +7,7 @@ import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UpdateUserDto;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.entity.UserEntity;
+import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.UserService;
 
@@ -29,8 +30,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getInfoUser() {
-        return null;
+    public UserDto getInfoUser(Principal principal) {
+        String name = principal.getName();
+        UserEntity user = userRepository.findByUsername(name);
+        return UserMapper.INSTANCE.toUserDto(user);
     }
 
     @Override
