@@ -1,9 +1,13 @@
 package ru.skypro.homework.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import ru.skypro.homework.dto.CommentsDto;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Data
 @Entity
@@ -11,7 +15,7 @@ import java.util.Objects;
 public class AdsEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private int pk;
+    private Long pk;
     private String image;
     private Integer price;
     private String title;
@@ -19,6 +23,9 @@ public class AdsEntity {
     @ManyToOne
     @JoinColumn(name = "author_id", referencedColumnName = "id")
     private UsersEntity usersByAuthorId;
+    @OneToMany(mappedBy = "ad")
+    @JsonIgnore
+    private List<CommentsEntity> comments;
 
 
 }
