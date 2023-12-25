@@ -4,14 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 @Data
 @Entity
 @Table(name = "users", schema = "public", catalog = "platformForResellingItems")
-public class UsersEntity {
+public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     private int id;
@@ -27,9 +25,9 @@ public class UsersEntity {
     private String email;
     @OneToMany(mappedBy = "usersByAuthorId")
     @JsonIgnore
-    private List<AdsEntity> ads;
+    private List<AdEntity> ads;
     @OneToMany(mappedBy = "user")
     @JsonIgnore
-    private List<CommentsEntity> comments;
+    private List<CommentEntity> comments;
 
 }
