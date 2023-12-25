@@ -3,6 +3,7 @@ package ru.skypro.homework.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,10 +31,9 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserDto> getInfoUser() {
-        //todo дописать метод getInfoUser
-
-        return null;
+    public ResponseEntity<UserDto> getInfoUser(Principal principal) {
+        UserDto userDto = userService.getInfoUser(principal);
+        return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 
     @PatchMapping("/me")

@@ -9,7 +9,7 @@ import java.security.Principal;
 
 public interface UserService {
     boolean setPassword(NewPasswordDto newPasswordDto, Principal principal);
-    UserDto getInfoUser();
+    UserDto getInfoUser(Principal principal);
     UpdateUserDto updateInfoUser(UpdateUserDto updateUserDto);
     void updateAvatarUser(MultipartFile image);
 }
