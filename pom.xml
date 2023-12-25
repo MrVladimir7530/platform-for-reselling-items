@@ -21,6 +21,7 @@
   <properties>
     <java.version>11</java.version>
     <org.mapstruct.version>1.6.0.Beta1</org.mapstruct.version>
+    <org.projectlombok.version>1.18.16</org.projectlombok.version>
   </properties>
 
   <dependencies>
@@ -55,7 +56,8 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <optional>true</optional>
+      <version>${org.projectlombok.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -101,11 +103,25 @@
           <source>11</source>
           <target>11</target>
           <annotationProcessorPaths>
+
             <path>
               <groupId>org.mapstruct</groupId>
               <artifactId>mapstruct-processor</artifactId>
               <version>${org.mapstruct.version}</version>
             </path>
+
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${org.projectlombok.version}</version>
+            </path>
+
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok-mapstruct-binding</artifactId>
+              <version>0.2.0</version>
+            </path>
+
           </annotationProcessorPaths>
         </configuration>
       </plugin>

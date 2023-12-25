@@ -30,5 +30,7 @@ create table comments(
     created_at date,
     text text,
     author_id int,
-    foreign key (author_id) references users (id)
+    ad_id int,
+    foreign key (author_id) references users (id),
+    foreign key (ad_id) references ads (pk)
 );

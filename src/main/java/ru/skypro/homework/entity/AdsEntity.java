@@ -15,7 +15,7 @@ import java.util.Set;
 public class AdsEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    private Long pk;
+    private int pk;
     private String image;
     private Integer price;
     private String title;
