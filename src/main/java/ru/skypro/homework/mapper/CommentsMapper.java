@@ -10,7 +10,8 @@ import ru.skypro.homework.entity.UserEntity;
 @Mapper(componentModel = "spring")
 public interface CommentsMapper {
     @Mapping(target = "pk", source = "commentDto.pk")
-    CommentEntity commentDtoAndUsersEntityAndAdsEntityToCommentsEntity(UserEntity user, AdEntity ad, CommentDto commentDto);
+    CommentEntity commentDtoAndUsersEntityAndAdsEntityToCommentsEntity(UserEntity user
+            , AdEntity ad, CommentDto commentDto);
 
     @Mapping(target = "authorImage", source = "user.image")
     @Mapping(target = "authorFirstName", source = "user.firstName")
