@@ -2,6 +2,7 @@ package ru.skypro.homework.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDto;
@@ -12,12 +13,20 @@ import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.UserService;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.security.Principal;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    @Value("${path.to.avatars.folder}")
+    private String avatarPath;
     private final UserRepository userRepository;
+
     @Override
     public boolean setPassword(NewPasswordDto newPasswordDto, Principal principal) {
         String name = principal.getName();
@@ -50,7 +59,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateAvatarUser(MultipartFile image, Principal principal) {
+    public String updateAvatarUser(MultipartFile fileImage, Principal principal) throws IOException {
+        String name = principal.getName();
+        UserEntity user = userRepository.findByUsername(name);
 
+        Path path = Path.of(avatarPath, UUID.randomUUID() + "." + getExtension(fileImage.getOriginalFilename()));
+
+        Files.createDirectories(path.getParent());
+        Files.deleteIfExists(path);
+        try (
+                InputStream inputStream = fileImage.getInputStream();
+                OutputStream outputStream = Files.newOutputStream(path, StandardOpenOption.CREATE_NEW);
+                BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, 4096);
+                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, 4096);
+        ) {
+            bufferedInputStream.transferTo(bufferedOutputStream);
+        }
+        user.setImage(path.toString());
+        userRepository.save(user);
+        return path.toString();
+    }
+
+    private String getExtension(String fileName) {
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 }
