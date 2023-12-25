@@ -4,14 +4,17 @@ package ru.skypro.homework.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UpdateUserDto;
 import ru.skypro.homework.dto.UserDto;
+import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.service.UserService;
 
+import java.io.IOException;
 import java.security.Principal;
 
 @Slf4j
@@ -37,14 +40,18 @@ public class UserController {
     }
 
     @PatchMapping("/me")
-    public ResponseEntity<UpdateUserDto> updateInfoUser(@RequestBody UpdateUserDto updateUserDto) {
-        //todo дописать метод updateInfoUser
-        return null;
+    public ResponseEntity<UpdateUserDto> updateInfoUser(@RequestBody UpdateUserDto updateUserDto, Principal principal) {
+        UpdateUserDto userDto = userService.updateInfoUser(updateUserDto, principal);
+        return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 
-    @PatchMapping("/me/image")
-    public ResponseEntity<Void> updateAvatarUser(@RequestParam MultipartFile image) {
-        //todo дописать метод updateAvatarUser
-        return null;
+    @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updateAvatarUser(@RequestParam MultipartFile image, Principal principal) {
+        try {
+            userService.updateAvatarUser(image, principal);
+            return ResponseEntity.ok().build();
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
