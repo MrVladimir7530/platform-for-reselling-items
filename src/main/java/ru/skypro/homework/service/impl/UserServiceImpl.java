@@ -22,6 +22,7 @@ public class UserServiceImpl implements UserService {
         UserEntity user = userRepository.findByUsername(name);
         if (newPasswordDto.getCurrentPassword().equals(user.getPassword())) {
             user.setPassword(newPasswordDto.getNewPassword());
+            userRepository.save(user);
             return true;
         }
         return false;
