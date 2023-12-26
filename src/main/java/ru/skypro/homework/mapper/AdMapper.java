@@ -3,6 +3,7 @@ package ru.skypro.homework.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.skypro.homework.dto.AdDto;
+import ru.skypro.homework.dto.ExtendedAdDto;
 import ru.skypro.homework.dto.PropertiesDto;
 import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.UserEntity;
@@ -23,4 +24,12 @@ public interface AdMapper {
     AdEntity propertiesDtoAndUserEntityAndStringImageToAdEntity(UserEntity userEntity
             , PropertiesDto propertiesDto, String image);
 
+
+    @Mapping(target = "authorLastName", source = "userEntity.lastName")
+    @Mapping(target = "authorFirstName", source = "userEntity.firstName")
+    @Mapping(target = "image", source = "adEntity.image")
+    ExtendedAdDto adEntityAndUserEntityToExtendedAdDto(UserEntity userEntity, AdEntity adEntity);
+
+    @Mapping(target = "author", source = "adEntity.usersByAuthorId.id")
+    AdDto adEntityToAdDto(AdEntity adEntity);
 }

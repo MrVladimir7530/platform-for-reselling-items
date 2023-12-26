@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.skypro.homework.dto.AdDto;
+import ru.skypro.homework.dto.ExtendedAdDto;
 import ru.skypro.homework.dto.PropertiesDto;
 import ru.skypro.homework.dto.RoleDto;
 import ru.skypro.homework.entity.AdEntity;
@@ -19,9 +20,9 @@ public class AdMapperTest {
     private AdMapper adMapper;
 
     private final UserEntity user = new UserEntity();
-    private final AdDto adDto = new AdDto();
-
+    private final AdDto adDtoInit = new AdDto();
     private final PropertiesDto propertiesDto = new PropertiesDto();
+    private final AdEntity adEntityInit = new AdEntity();
 
     @BeforeEach
     public void init() {
@@ -35,15 +36,23 @@ public class AdMapperTest {
         user.setImage("image");
         user.setEmail("email");
 
-        adDto.setAuthor(1);
-        adDto.setImage("image");
-        adDto.setPk(1);
-        adDto.setPrice(20);
-        adDto.setTitle("title");
+        adDtoInit.setAuthor(1);
+        adDtoInit.setImage("image");
+        adDtoInit.setPk(1);
+        adDtoInit.setPrice(20);
+        adDtoInit.setTitle("title");
 
         propertiesDto.setTitle("title");
         propertiesDto.setPrice(30);
         propertiesDto.setDescription("Description");
+
+        adEntityInit.setPk(1);
+        adEntityInit.setPrice(30);
+        adEntityInit.setImage("image");
+        adEntityInit.setTitle("title");
+        adEntityInit.setDescription("Description");
+        adEntityInit.setUsersByAuthorId(user);
+
 
 
 
@@ -53,14 +62,14 @@ public class AdMapperTest {
     public void shouldCorrectResultFromMethodAdDtoAndUserEntityToAdEntity() {
 
 
-        AdEntity adEntity = adMapper.adDtoAndUserEntityToAdEntity(user, adDto);
+        AdEntity adEntity = adMapper.adDtoAndUserEntityToAdEntity(user, adDtoInit);
 
         assertNotNull(adEntity);
-        assertEquals(adDto.getPk(), adEntity.getPk());
-        assertEquals(adDto.getImage(), adEntity.getImage());
-        assertEquals(adDto.getPrice(), adEntity.getPrice());
-        assertEquals(adDto.getTitle(), adEntity.getTitle());
-        assertEquals(adDto.getAuthor(), adEntity.getUsersByAuthorId().getId());
+        assertEquals(adDtoInit.getPk(), adEntity.getPk());
+        assertEquals(adDtoInit.getImage(), adEntity.getImage());
+        assertEquals(adDtoInit.getPrice(), adEntity.getPrice());
+        assertEquals(adDtoInit.getTitle(), adEntity.getTitle());
+        assertEquals(adDtoInit.getAuthor(), adEntity.getUsersByAuthorId().getId());
 
 
     }
@@ -76,7 +85,41 @@ public class AdMapperTest {
         assertEquals(propertiesDto.getPrice(), adEntity.getPrice());
         assertEquals(propertiesDto.getTitle(), adEntity.getTitle());
         assertEquals(propertiesDto.getDescription(), adEntity.getDescription());
-        assertEquals(adDto.getAuthor(), adEntity.getUsersByAuthorId().getId());
+        assertEquals(adDtoInit.getAuthor(), adEntity.getUsersByAuthorId().getId());
+
+    }
+    @Test
+    public void shouldCorrectResultFromMethodAdEntityAndUserEntityToExtendedAdDto() {
+
+
+        ExtendedAdDto extendedAdDto = adMapper.adEntityAndUserEntityToExtendedAdDto(user
+                , adEntityInit);
+
+        assertNotNull(extendedAdDto);
+        assertEquals(adEntityInit.getPk(), extendedAdDto.getPk());
+        assertEquals(user.getFirstName(), extendedAdDto.getAuthorFirstName());
+        assertEquals(user.getLastName(), extendedAdDto.getAuthorLastName());
+        assertEquals(adEntityInit.getDescription(), extendedAdDto.getDescription());
+        assertEquals(user.getEmail(), extendedAdDto.getEmail());
+        assertEquals(adEntityInit.getImage(), extendedAdDto.getImage());
+        assertEquals(user.getPhone(), extendedAdDto.getPhone());
+        assertEquals(adEntityInit.getPrice(), extendedAdDto.getPrice());
+        assertEquals(adEntityInit.getTitle(), extendedAdDto.getTitle());
+
+    }
+    @Test
+    public void shouldCorrectResultFromMethodAdEntityToAdDto() {
+
+
+        AdDto  adDto= adMapper.adEntityToAdDto(adEntityInit);
+
+        assertNotNull(adDto);
+        assertEquals(adEntityInit.getUsersByAuthorId().getId(), adDto.getAuthor());
+        assertEquals(adEntityInit.getImage(), adDto.getImage());
+        assertEquals(adEntityInit.getPk(), adDto.getPk());
+        assertEquals(adEntityInit.getPrice(), adDto.getPrice());
+        assertEquals(adEntityInit.getTitle(), adDto.getTitle());
+
 
     }
 
