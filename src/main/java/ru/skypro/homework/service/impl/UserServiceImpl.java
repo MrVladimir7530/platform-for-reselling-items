@@ -1,7 +1,8 @@
 package ru.skypro.homework.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.Mapper;
+import lombok.extern.slf4j.Slf4j;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,9 +21,11 @@ import java.nio.file.StandardOpenOption;
 import java.security.Principal;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    UserMapper instance = Mappers.getMapper(UserMapper.class);
     @Value("${path.to.avatars.folder}")
     private String avatarPath;
     private final UserRepository userRepository;
@@ -43,17 +46,18 @@ public class UserServiceImpl implements UserService {
     public UserDto getInfoUser(Principal principal) {
         String name = principal.getName();
         UserEntity user = userRepository.findByUsername(name);
-        return UserMapper.INSTANCE.toUserDto(user);
+        return instance.toUserDto(user);
     }
 
     @Override
     public UpdateUserDto updateInfoUser(UpdateUserDto updateUserDto, Principal principal) {
         String name = principal.getName();
         UserEntity user = userRepository.findByUsername(name);
-        UpdateUserDto oldUserDto = UserMapper.INSTANCE.toUpdateUserDto(user);
+        UpdateUserDto oldUserDto = instance.toUpdateUserDto(user);
         user.setFirstName(updateUserDto.getFirstName());
         user.setLastName(updateUserDto.getLastName());
         user.setPhone(updateUserDto.getPhone());
+        log.info("User information has been changed");
         userRepository.save(user);
         return oldUserDto;
     }
@@ -77,6 +81,7 @@ public class UserServiceImpl implements UserService {
         }
         user.setImage(path.toString());
         userRepository.save(user);
+        log.info("The avatar is saved in repository");
         return path.toString();
     }
 
