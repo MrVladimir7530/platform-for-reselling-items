@@ -13,7 +13,7 @@ public interface AdMapper {
     @Mapping(target = "usersByAuthorId", source = "userEntity")
     @Mapping(target = "image", source = "adDto.image")
     @Mapping(target = "description", ignore = true)
-    AdEntity adDtoToAdEntity(UserEntity userEntity, AdDto adDto);
+    AdEntity adDtoAndUserEntityToAdEntity(UserEntity userEntity, AdDto adDto);
 
     @Mapping(target = "pk", ignore = true)
     @Mapping(target = "title", source = "propertiesDto.title")
