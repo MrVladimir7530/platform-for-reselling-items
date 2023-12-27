@@ -10,7 +10,6 @@ import ru.skypro.homework.entity.UserEntity;
 
 @Mapper
 public interface UserMapper {
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     UserDto toUserDto(UserEntity user);
     UpdateUserDto toUpdateUserDto(UserEntity user);
