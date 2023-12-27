@@ -13,9 +13,9 @@ public interface CommentsMapper {
     CommentEntity commentDtoAndUsersEntityAndAdsEntityToCommentsEntity(UserEntity user
             , AdEntity ad, CommentDto commentDto);
 
-    @Mapping(target = "authorImage", source = "user.image")
-    @Mapping(target = "authorFirstName", source = "user.firstName")
-    @Mapping(target = "author", source = "user.id")
-    CommentDto commentsEntityAndUsersEntityToCommentDto(UserEntity user, CommentEntity commentEntity);
+    @Mapping(target = "authorImage", source = "commentEntity.user.image")
+    @Mapping(target = "authorFirstName", source = "commentEntity.user.firstName")
+    @Mapping(target = "author", source = "commentEntity.user.id")
+    CommentDto commentsEntityAndUsersEntityToCommentDto(CommentEntity commentEntity);
 
 }

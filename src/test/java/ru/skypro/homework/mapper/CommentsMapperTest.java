@@ -79,7 +79,7 @@ public class CommentsMapperTest {
     public void shouldCorrectResultFromMethodCommentsEntityAndUsersEntityToCommentDto() {
 
 
-        CommentDto commentDto1 = commentsMapper.commentsEntityAndUsersEntityToCommentDto(user, commentEntity1);
+        CommentDto commentDto1 = commentsMapper.commentsEntityAndUsersEntityToCommentDto(commentEntity1);
 
         assertNotNull(commentDto1);
         assertEquals(commentEntity1.getUser().getId(), commentDto1.getAuthor());
