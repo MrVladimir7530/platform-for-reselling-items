@@ -12,7 +12,6 @@ public class ImageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @JsonIgnore
     private String path;
     private Long size;
     private String contentType;
