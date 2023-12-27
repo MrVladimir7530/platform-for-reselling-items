@@ -1,0 +1,21 @@
+package ru.skypro.homework.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+
+import javax.persistence.*;
+
+@Data
+@Entity
+@Table(name = "images", schema = "public", catalog = "platformForResellingItems")
+public class ImageEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    @JsonIgnore
+    private String path;
+    private Long size;
+    private String contentType;
+
+
+}

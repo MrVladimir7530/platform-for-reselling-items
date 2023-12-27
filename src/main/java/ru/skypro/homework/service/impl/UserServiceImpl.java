@@ -79,7 +79,8 @@ public class UserServiceImpl implements UserService {
         ) {
             bufferedInputStream.transferTo(bufferedOutputStream);
         }
-        user.setImage(path.toString());
+        //todo написать аватар
+//        user.setImage(path.toString());
         userRepository.save(user);
         log.info("The avatar is saved in repository");
         return path.toString();
