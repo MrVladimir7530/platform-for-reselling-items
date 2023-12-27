@@ -21,8 +21,10 @@ public class UserEntity {
     private String password;
     private String phone;
     private String role;
-    private String image;
     private String email;
+    @OneToOne
+    @JoinColumn(name = "image")
+    private ImageEntity imageEntity;
     @OneToMany(mappedBy = "usersByAuthorId")
     @JsonIgnore
     private List<AdEntity> ads;

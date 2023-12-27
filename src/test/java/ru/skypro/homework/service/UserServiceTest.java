@@ -11,6 +11,7 @@ import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UpdateUserDto;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.entity.UserEntity;
+import ru.skypro.homework.repository.ImagesRepository;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.impl.UserServiceImpl;
 
@@ -26,6 +27,7 @@ import static org.mockito.Mockito.*;
 
 
 public class UserServiceTest {
+    private ImagesRepository imagesRepository;
     private UserRepository userRepository;
     private UserService userService;
     private MultipartFile multipartFile;
@@ -39,9 +41,10 @@ public class UserServiceTest {
 
     @BeforeEach
     public void init() {
+        imagesRepository = Mockito.mock(ImagesRepository.class);
         userRepository = Mockito.mock(UserRepository.class);
         multipartFile = Mockito.mock(MultipartFile.class);
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository, imagesRepository);
         principal = () -> username;
     }
 

@@ -12,16 +12,24 @@ create table users(
     image text,
     email varchar(255)
 );
+--changeset volkov:create_table_images
+create table images(
+    id serial primary key,
+    path varchar(255),
+    size bigint,
+    content_type varchar(255)
+);
 
 --changeset Volkov:create_table_ads
 create table ads(
     pk serial primary key,
-    image varchar(255),
     price integer,
     title text,
     description text,
     author_id int,
-    foreign key (author_id) references users (id)
+    image int,
+    foreign key (author_id) references users (id),
+    foreign key (image) references images(id)
 );
 
 --changeset Volkov:create_table_comments
@@ -34,3 +42,17 @@ create table comments(
     foreign key (author_id) references users (id),
     foreign key (ad_id) references ads (pk)
 );
+
+
+--changeset Volkov:delete_column_in_table_users
+alter table users
+    drop column image;
+
+--changeset Volkov:add_images_id_in_table_users
+alter table users
+    add image int;
+
+--changeset Volkov:foreign_key_images_id_in_table_users
+alter table users
+    add foreign key (image) references images (id);
+
