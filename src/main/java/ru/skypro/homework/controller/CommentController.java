@@ -8,11 +8,17 @@ import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.dto.CommentsDto;
 import ru.skypro.homework.dto.CreateOrUpdateCommentDto;
+import ru.skypro.homework.entity.AdEntity;
+import ru.skypro.homework.service.AdService;
+import ru.skypro.homework.service.CommentService;
 
 @Slf4j
+@CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/ads/{id}/comments")
 public class CommentController {
+    private final CommentService commentService;
     /**
      * Создание коментария. Аргументы: Id объявления и текст комментария.
      * @param adId
@@ -20,9 +26,11 @@ public class CommentController {
      * @return ResponseEntity<CommentDto>
      */
     //todo дописать метод контроллера
-    @PostMapping("/ads/{id}/comments")
+    @PostMapping()
     public ResponseEntity<CommentDto> createComment(@PathVariable Integer adId
             , @RequestBody CreateOrUpdateCommentDto createOrUpdateCommentDto) {
+
+
 
         return null;
     }
@@ -33,7 +41,7 @@ public class CommentController {
      * @return ResponseEntity<CommentsDto>
      */
     //todo дописать метод контроллера
-    @GetMapping("/ads/{id}/comments")
+    @GetMapping()
     public ResponseEntity<CommentsDto> getComments(@PathVariable Integer adId) {
         return null;
     }
@@ -46,8 +54,8 @@ public class CommentController {
      * @return ResponseEntity<CommentDto>
      */
     //todo дописать метод контроллера
-    @PatchMapping("/ads/{adId}/comments/{commentId}")
-    public ResponseEntity<CommentDto> editComment(@PathVariable Integer adId, @PathVariable Integer commentId
+    @PatchMapping("/{commentId}")
+    public ResponseEntity<CommentDto> editComment(@PathVariable Integer id, @PathVariable Integer commentId
             , @RequestBody CreateOrUpdateCommentDto createOrUpdateCommentDto ) {
         return null;
     }
@@ -59,8 +67,8 @@ public class CommentController {
      * @return ResponseEntity<HttpStatus>
      */
     //todo дописать метод контроллера
-    @DeleteMapping("/ads/{adId}/comments/{commentId}")
-    public ResponseEntity<HttpStatus> createComment(@PathVariable Integer adId, @PathVariable Integer commentId) {
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<HttpStatus> createComment(@PathVariable Integer id, @PathVariable Integer commentId) {
         return null;
     }
 

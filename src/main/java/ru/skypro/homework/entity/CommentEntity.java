@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -14,7 +15,7 @@ public class CommentEntity {
     private int pk;
 
     @Column(name = "created_at")
-    private Date createdAt;
+    private Date createdAt = Date.valueOf(LocalDate.now());
 
     private String text;
 

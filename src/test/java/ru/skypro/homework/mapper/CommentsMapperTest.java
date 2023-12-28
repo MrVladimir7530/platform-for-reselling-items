@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.skypro.homework.dto.CommentDto;
+import ru.skypro.homework.dto.CreateOrUpdateCommentDto;
 import ru.skypro.homework.dto.RoleDto;
 import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.CommentEntity;
@@ -25,6 +26,7 @@ public class CommentsMapperTest {
     private final CommentDto commentDtoInit = new CommentDto();
     private final CommentEntity commentEntityInit = new CommentEntity();
     private final ImageEntity imageInit = new ImageEntity();
+    private final CreateOrUpdateCommentDto createOrUpdateCommentDtoInit = new CreateOrUpdateCommentDto();
 
 
     @BeforeEach
@@ -66,7 +68,21 @@ public class CommentsMapperTest {
         imageInit.setSize(10L);
         imageInit.setContentType("Какой-то ContentType");
 
+        createOrUpdateCommentDtoInit.setText("Какой-то текст");
 
+
+    }
+
+    @Test
+    public void shouldCorrectResultFromMethodCreateOrUpdateCommentDtoAndAdEntityToCommentEntity() {
+        CommentEntity commentEntity = commentsMapper.createOrUpdateCommentDtoAndAdEntityToCommentEntity(
+                createOrUpdateCommentDtoInit, ad);
+        assertNotNull(commentEntity);
+        assertEquals(0, commentEntity.getPk());
+        assertEquals(Date.valueOf(LocalDate.now()), commentEntity.getCreatedAt());
+        assertEquals(createOrUpdateCommentDtoInit.getText(), commentEntity.getText());
+        assertEquals(ad.getUsersByAuthorId(), commentEntity.getUser());
+        assertEquals(ad, commentEntity.getAd());
     }
     @Test
     public void shouldCorrectResultFromMethodCommentDtoAndUsersEntityAndAdsEntityToCommentsEntity() {
