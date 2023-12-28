@@ -8,6 +8,7 @@ import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.dto.RoleDto;
 import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.CommentEntity;
+import ru.skypro.homework.entity.ImageEntity;
 import ru.skypro.homework.entity.UserEntity;
 
 import java.sql.Date;
@@ -19,10 +20,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CommentsMapperTest {
     @Autowired
     private CommentsMapper commentsMapper;
-    private UserEntity user = new UserEntity();
-    private AdEntity ad = new AdEntity();
-    private CommentDto commentDto = new CommentDto();
-    private CommentEntity commentEntity1 = new CommentEntity();
+    private final UserEntity user = new UserEntity();
+    private final AdEntity ad = new AdEntity();
+    private final CommentDto commentDtoInit = new CommentDto();
+    private final CommentEntity commentEntityInit = new CommentEntity();
+    private final ImageEntity imageInit = new ImageEntity();
+
 
     @BeforeEach
     public void init() {
@@ -33,30 +36,35 @@ public class CommentsMapperTest {
         user.setPassword("password");
         user.setPhone("phone");
         user.setRole(RoleDto.USER.toString());
-        user.setImage("image");
+        user.setImageEntity(imageInit);
         user.setEmail("email");
 
 
         ad.setPk(1);
-        ad.setImage("image");
+        ad.setImageEntity(imageInit);
         ad.setPrice(20);
         ad.setTitle("title");
         ad.setDescription("description");
         ad.setUsersByAuthorId(user);
 
 
-        commentDto.setAuthor(1);
-        commentDto.setAuthorFirstName("authorFirstName");
-        commentDto.setAuthorImage("authorImage");
-        commentDto.setCreatedAt(Date.valueOf(LocalDate.now()));
-        commentDto.setPk(1);
-        commentDto.setText("text");
+        commentDtoInit.setAuthor(1);
+        commentDtoInit.setAuthorFirstName("authorFirstName");
+        commentDtoInit.setAuthorImage("authorImage");
+        commentDtoInit.setCreatedAt(Date.valueOf(LocalDate.now()));
+        commentDtoInit.setPk(1);
+        commentDtoInit.setText("text");
 
-        commentEntity1.setPk(2);
-        commentEntity1.setCreatedAt(Date.valueOf(LocalDate.now()));
-        commentEntity1.setText("text");
-        commentEntity1.setUser(user);
-        commentEntity1.setAd(ad);
+        commentEntityInit.setPk(2);
+        commentEntityInit.setCreatedAt(Date.valueOf(LocalDate.now()));
+        commentEntityInit.setText("text");
+        commentEntityInit.setUser(user);
+        commentEntityInit.setAd(ad);
+
+        imageInit.setId(1);
+        imageInit.setPath("Какой-то путь");
+        imageInit.setSize(10L);
+        imageInit.setContentType("Какой-то ContentType");
 
 
     }
@@ -65,12 +73,12 @@ public class CommentsMapperTest {
 
 
         CommentEntity commentEntity = commentsMapper.commentDtoAndUsersEntityAndAdsEntityToCommentsEntity(
-                 user, ad, commentDto);
+                 user, ad, commentDtoInit);
 
         assertNotNull(commentEntity);
-        assertEquals(commentDto.getPk(), commentEntity.getPk());
-        assertEquals(commentDto.getCreatedAt(), commentEntity.getCreatedAt());
-        assertEquals(commentDto.getText(), commentEntity.getText());
+        assertEquals(commentDtoInit.getPk(), commentEntity.getPk());
+        assertEquals(commentDtoInit.getCreatedAt(), commentEntity.getCreatedAt());
+        assertEquals(commentDtoInit.getText(), commentEntity.getText());
         assertEquals(user, commentEntity.getUser());
         assertEquals(ad, commentEntity.getAd());
 
@@ -79,14 +87,14 @@ public class CommentsMapperTest {
     public void shouldCorrectResultFromMethodCommentsEntityAndUsersEntityToCommentDto() {
 
 
-        CommentDto commentDto1 = commentsMapper.commentsEntityAndUsersEntityToCommentDto(commentEntity1);
+        CommentDto commentDto = commentsMapper.commentsEntityAndUsersEntityToCommentDto(commentEntityInit);
 
-        assertNotNull(commentDto1);
-        assertEquals(commentEntity1.getUser().getId(), commentDto1.getAuthor());
-        assertEquals(commentEntity1.getUser().getImage(), commentDto1.getAuthorImage());
-        assertEquals(commentEntity1.getUser().getFirstName(), commentDto1.getAuthorFirstName());
-        assertEquals(commentEntity1.getCreatedAt(), commentDto1.getCreatedAt());
-        assertEquals(commentEntity1.getText(), commentDto1.getText());
+        assertNotNull(commentDto);
+        assertEquals(commentEntityInit.getUser().getId(), commentDto.getAuthor());
+        assertEquals(commentEntityInit.getUser().getImageEntity().getPath(), commentDto.getAuthorImage());
+        assertEquals(commentEntityInit.getUser().getFirstName(), commentDto.getAuthorFirstName());
+        assertEquals(commentEntityInit.getCreatedAt(), commentDto.getCreatedAt());
+        assertEquals(commentEntityInit.getText(), commentDto.getText());
 
 
     }

@@ -9,6 +9,7 @@ import ru.skypro.homework.dto.ExtendedAdDto;
 import ru.skypro.homework.dto.PropertiesDto;
 import ru.skypro.homework.dto.RoleDto;
 import ru.skypro.homework.entity.AdEntity;
+import ru.skypro.homework.entity.ImageEntity;
 import ru.skypro.homework.entity.UserEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,9 +24,15 @@ public class AdMapperTest {
     private final AdDto adDtoInit = new AdDto();
     private final PropertiesDto propertiesDto = new PropertiesDto();
     private final AdEntity adEntityInit = new AdEntity();
+    private final ImageEntity imageInit = new ImageEntity();
 
     @BeforeEach
     public void init() {
+        imageInit.setId(1);
+        imageInit.setPath("Какой-то путь");
+        imageInit.setSize(10L);
+        imageInit.setContentType("Какой-то ContentType");
+
         user.setId(1);
         user.setUsername("UserTest");
         user.setFirstName("User");
@@ -33,11 +40,11 @@ public class AdMapperTest {
         user.setPassword("password");
         user.setPhone("phone");
         user.setRole(RoleDto.USER.toString());
-        user.setImage("image");
+        user.setImageEntity(imageInit);
         user.setEmail("email");
 
         adDtoInit.setAuthor(1);
-        adDtoInit.setImage("image");
+        adDtoInit.setImage(imageInit.getPath());
         adDtoInit.setPk(1);
         adDtoInit.setPrice(20);
         adDtoInit.setTitle("title");
@@ -48,7 +55,7 @@ public class AdMapperTest {
 
         adEntityInit.setPk(1);
         adEntityInit.setPrice(30);
-        adEntityInit.setImage("image");
+        adEntityInit.setImageEntity(imageInit);
         adEntityInit.setTitle("title");
         adEntityInit.setDescription("Description");
         adEntityInit.setUsersByAuthorId(user);
@@ -62,11 +69,11 @@ public class AdMapperTest {
     public void shouldCorrectResultFromMethodAdDtoAndUserEntityToAdEntity() {
 
 
-        AdEntity adEntity = adMapper.adDtoAndUserEntityToAdEntity(user, adDtoInit);
+        AdEntity adEntity = adMapper.adDtoAndUserEntityToAdEntity(user, adDtoInit, imageInit);
 
         assertNotNull(adEntity);
         assertEquals(adDtoInit.getPk(), adEntity.getPk());
-        assertEquals(adDtoInit.getImage(), adEntity.getImage());
+        assertEquals(adDtoInit.getImage(), adEntity.getImageEntity().getPath());
         assertEquals(adDtoInit.getPrice(), adEntity.getPrice());
         assertEquals(adDtoInit.getTitle(), adEntity.getTitle());
         assertEquals(adDtoInit.getAuthor(), adEntity.getUsersByAuthorId().getId());
@@ -78,10 +85,10 @@ public class AdMapperTest {
 
 
         AdEntity adEntity = adMapper.propertiesDtoAndUserEntityAndStringImageToAdEntity(user
-                , propertiesDto, "image");
+                , propertiesDto, imageInit);
 
         assertNotNull(adEntity);
-        assertEquals("image", adEntity.getImage());
+        assertEquals(imageInit.getPath(), adEntity.getImageEntity().getPath());
         assertEquals(propertiesDto.getPrice(), adEntity.getPrice());
         assertEquals(propertiesDto.getTitle(), adEntity.getTitle());
         assertEquals(propertiesDto.getDescription(), adEntity.getDescription());
@@ -101,7 +108,7 @@ public class AdMapperTest {
         assertEquals(user.getLastName(), extendedAdDto.getAuthorLastName());
         assertEquals(adEntityInit.getDescription(), extendedAdDto.getDescription());
         assertEquals(user.getEmail(), extendedAdDto.getEmail());
-        assertEquals(adEntityInit.getImage(), extendedAdDto.getImage());
+        assertEquals(adEntityInit.getImageEntity().getPath(), extendedAdDto.getImage());
         assertEquals(user.getPhone(), extendedAdDto.getPhone());
         assertEquals(adEntityInit.getPrice(), extendedAdDto.getPrice());
         assertEquals(adEntityInit.getTitle(), extendedAdDto.getTitle());
@@ -115,7 +122,7 @@ public class AdMapperTest {
 
         assertNotNull(adDto);
         assertEquals(adEntityInit.getUsersByAuthorId().getId(), adDto.getAuthor());
-        assertEquals(adEntityInit.getImage(), adDto.getImage());
+        assertEquals(adEntityInit.getImageEntity().getPath(), adDto.getImage());
         assertEquals(adEntityInit.getPk(), adDto.getPk());
         assertEquals(adEntityInit.getPrice(), adDto.getPrice());
         assertEquals(adEntityInit.getTitle(), adDto.getTitle());
