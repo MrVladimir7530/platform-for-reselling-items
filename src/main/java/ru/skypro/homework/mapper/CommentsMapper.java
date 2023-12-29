@@ -9,6 +9,8 @@ import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.CommentEntity;
 import ru.skypro.homework.entity.UserEntity;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface CommentsMapper {
 
@@ -26,6 +28,8 @@ public interface CommentsMapper {
     @Mapping(target = "authorImage", source = "commentEntity.user.imageEntity.path")
     @Mapping(target = "authorFirstName", source = "commentEntity.user.firstName")
     @Mapping(target = "author", source = "commentEntity.user.id")
-    CommentDto commentsEntityAndUsersEntityToCommentDto(CommentEntity commentEntity);
+    CommentDto commentsEntityToCommentDto(CommentEntity commentEntity);
+
+    List<CommentDto> listCommentEntityToListCommentDto(List<CommentEntity> commentEntityList);
 
 }

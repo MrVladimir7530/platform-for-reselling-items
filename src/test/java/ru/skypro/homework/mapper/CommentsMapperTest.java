@@ -14,6 +14,8 @@ import ru.skypro.homework.entity.UserEntity;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,6 +27,7 @@ public class CommentsMapperTest {
     private final AdEntity ad = new AdEntity();
     private final CommentDto commentDtoInit = new CommentDto();
     private final CommentEntity commentEntityInit = new CommentEntity();
+    private final CommentEntity commentEntityInit1 = new CommentEntity();
     private final ImageEntity imageInit = new ImageEntity();
     private final CreateOrUpdateCommentDto createOrUpdateCommentDtoInit = new CreateOrUpdateCommentDto();
 
@@ -62,6 +65,12 @@ public class CommentsMapperTest {
         commentEntityInit.setText("text");
         commentEntityInit.setUser(user);
         commentEntityInit.setAd(ad);
+
+        commentEntityInit1.setPk(3);
+        commentEntityInit1.setCreatedAt(Date.valueOf(LocalDate.now()));
+        commentEntityInit1.setText("text1");
+        commentEntityInit1.setUser(user);
+        commentEntityInit1.setAd(ad);
 
         imageInit.setId(1);
         imageInit.setPath("Какой-то путь");
@@ -103,7 +112,7 @@ public class CommentsMapperTest {
     public void shouldCorrectResultFromMethodCommentsEntityAndUsersEntityToCommentDto() {
 
 
-        CommentDto commentDto = commentsMapper.commentsEntityAndUsersEntityToCommentDto(commentEntityInit);
+        CommentDto commentDto = commentsMapper.commentsEntityToCommentDto(commentEntityInit);
 
         assertNotNull(commentDto);
         assertEquals(commentEntityInit.getUser().getId(), commentDto.getAuthor());
@@ -111,6 +120,25 @@ public class CommentsMapperTest {
         assertEquals(commentEntityInit.getUser().getFirstName(), commentDto.getAuthorFirstName());
         assertEquals(commentEntityInit.getCreatedAt(), commentDto.getCreatedAt());
         assertEquals(commentEntityInit.getText(), commentDto.getText());
+
+
+    }
+    @Test
+    public void shouldCorrectResultFromMethodListCommentEntityToListCommentDto() {
+
+        List<CommentEntity> commentEntityList = new ArrayList<>(List.of(commentEntityInit, commentEntityInit1));
+        CommentDto commentDto = commentsMapper.commentsEntityToCommentDto(commentEntityInit);
+        CommentDto commentDto1 = commentsMapper.commentsEntityToCommentDto(commentEntityInit1);
+
+        List<CommentDto> expected = new ArrayList<>(List.of(commentDto, commentDto1));
+        List<CommentDto> actual = commentsMapper.listCommentEntityToListCommentDto(commentEntityList);
+
+
+        assertNotNull(actual);
+        assertEquals(expected.size(), actual.size());
+        assertTrue(actual.containsAll(expected));
+
+
 
 
     }

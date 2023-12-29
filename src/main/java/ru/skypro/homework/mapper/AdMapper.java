@@ -12,7 +12,7 @@ import ru.skypro.homework.entity.UserEntity;
 @Mapper(componentModel = "spring")
 public interface AdMapper {
 
-    //todo маппер
+
     @Mapping(target = "usersByAuthorId", source = "userEntity")
     @Mapping(target = "description", ignore = true)
     AdEntity adDtoAndUserEntityToAdEntity(UserEntity userEntity, AdDto adDto, ImageEntity image);
