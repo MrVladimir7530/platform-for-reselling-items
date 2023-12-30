@@ -81,14 +81,9 @@ public class UserServiceImpl implements UserService {
 
         Files.createDirectories(path.getParent());
         Files.deleteIfExists(path);
-        try (
-                InputStream inputStream = fileImage.getInputStream();
-                OutputStream outputStream = Files.newOutputStream(path, StandardOpenOption.CREATE_NEW);
-                BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, 4096);
-                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, 4096);
-        ) {
-            bufferedInputStream.transferTo(bufferedOutputStream);
-        }
+
+        readAndWriteInTheDirectory(fileImage, path);
+
         image.setPath(path.toString());
         image.setContentType(fileImage.getContentType());
         image.setSize(fileImage.getSize());
@@ -101,6 +96,17 @@ public class UserServiceImpl implements UserService {
         }
         log.info("The avatar is saved in repository");
         return path.toString();
+    }
+
+    private void readAndWriteInTheDirectory(MultipartFile fileImage, Path path) throws IOException {
+        try (
+                InputStream inputStream = fileImage.getInputStream();
+                OutputStream outputStream = Files.newOutputStream(path, StandardOpenOption.CREATE_NEW);
+                BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, 4096);
+                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, 4096);
+        ) {
+            bufferedInputStream.transferTo(bufferedOutputStream);
+        }
     }
 
     private String getExtension(String fileName) {
