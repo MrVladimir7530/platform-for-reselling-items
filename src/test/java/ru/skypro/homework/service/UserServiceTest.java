@@ -121,7 +121,7 @@ public class UserServiceTest {
 //        ReflectionTestUtils.setField(userService, "avatarPath", "C:\\avatar");
 //
 //        String s = userService.updateAvatarUser(multipartFile, principal);
-
+//
 //    }
 
 
