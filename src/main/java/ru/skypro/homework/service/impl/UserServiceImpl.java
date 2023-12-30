@@ -1,9 +1,12 @@
 package ru.skypro.homework.service.impl;
 
+import liquibase.pro.packaged.B;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDto;
@@ -35,10 +38,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean setPassword(NewPasswordDto newPasswordDto, Principal principal) {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String name = principal.getName();
         UserEntity user = userRepository.findByUsername(name);
-        if (newPasswordDto.getCurrentPassword().equals(user.getPassword())) {
-            user.setPassword(newPasswordDto.getNewPassword());
+
+        String currentPassword = newPasswordDto.getCurrentPassword();
+        String password = user.getPassword();
+
+        if (passwordEncoder.matches(currentPassword, password)) {
+            String encodeNewPassword = passwordEncoder.encode(newPasswordDto.getNewPassword());
+            user.setPassword(encodeNewPassword);
+
+            log.info("password set");
             userRepository.save(user);
             return true;
         }
@@ -56,10 +67,13 @@ public class UserServiceImpl implements UserService {
     public UpdateUserDto updateInfoUser(UpdateUserDto updateUserDto, Principal principal) {
         String name = principal.getName();
         UserEntity user = userRepository.findByUsername(name);
+
         UpdateUserDto oldUserDto = instance.toUpdateUserDto(user);
+
         user.setFirstName(updateUserDto.getFirstName());
         user.setLastName(updateUserDto.getLastName());
         user.setPhone(updateUserDto.getPhone());
+
         log.info("User information has been changed");
         userRepository.save(user);
         return oldUserDto;
