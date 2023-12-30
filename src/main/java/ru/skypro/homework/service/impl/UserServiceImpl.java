@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.skypro.homework.config.AppUserDetailsManager;
 import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UpdateUserDto;
 import ru.skypro.homework.dto.UserDto;
@@ -35,25 +36,15 @@ public class UserServiceImpl implements UserService {
     private String avatarPath;
     private final UserRepository userRepository;
     private final ImagesRepository imagesRepository;
+    private final AppUserDetailsManager appUserDetailsManager;
 
     @Override
-    public boolean setPassword(NewPasswordDto newPasswordDto, Principal principal) {
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String name = principal.getName();
-        UserEntity user = userRepository.findByUsername(name);
-
+    public void setPassword(NewPasswordDto newPasswordDto) {
         String currentPassword = newPasswordDto.getCurrentPassword();
-        String password = user.getPassword();
+        String newPassword = newPasswordDto.getNewPassword();
 
-        if (passwordEncoder.matches(currentPassword, password)) {
-            String encodeNewPassword = passwordEncoder.encode(newPasswordDto.getNewPassword());
-            user.setPassword(encodeNewPassword);
+        appUserDetailsManager.changePassword(currentPassword, newPassword);
 
-            log.info("password set");
-            userRepository.save(user);
-            return true;
-        }
-        return false;
     }
 
     @Override

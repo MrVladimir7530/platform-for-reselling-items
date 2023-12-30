@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import ru.skypro.homework.config.AppUserDetailsManager;
 import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UpdateUserDto;
 import ru.skypro.homework.dto.UserDto;
@@ -31,6 +32,7 @@ public class UserServiceTest {
     private UserRepository userRepository;
     private UserService userService;
     private MultipartFile multipartFile;
+    private AppUserDetailsManager appUserDetailsManager;
     Principal principal;
     Integer id = 1;
     String username = "vladimir@mail";
@@ -44,7 +46,7 @@ public class UserServiceTest {
         imagesRepository = Mockito.mock(ImagesRepository.class);
         userRepository = Mockito.mock(UserRepository.class);
         multipartFile = Mockito.mock(MultipartFile.class);
-        userService = new UserServiceImpl(userRepository, imagesRepository);
+        userService = new UserServiceImpl(userRepository, imagesRepository, appUserDetailsManager);
         principal = () -> username;
     }
 
@@ -57,8 +59,8 @@ public class UserServiceTest {
         newPasswordDto.setCurrentPassword(password);
         newPasswordDto.setNewPassword(password + password);
 
-        boolean result = userService.setPassword(newPasswordDto, principal);
-        assertTrue(result);
+        userService.setPassword(newPasswordDto);
+
     }
 
     @Test
@@ -70,8 +72,7 @@ public class UserServiceTest {
         newPasswordDto.setCurrentPassword(password + "1");
         newPasswordDto.setNewPassword(password + password);
 
-        boolean result = userService.setPassword(newPasswordDto, principal);
-        assertFalse(result);
+        userService.setPassword(newPasswordDto);
     }
 
     @Test

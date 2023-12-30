@@ -26,11 +26,10 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/set_password")
-    public ResponseEntity<Void> setPassword(@RequestBody NewPasswordDto newPasswordDto, Principal principal) {
-        if (userService.setPassword(newPasswordDto, principal)) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.badRequest().build();
+    public ResponseEntity<Void> setPassword(@RequestBody NewPasswordDto newPasswordDto) {
+        userService.setPassword(newPasswordDto);
+        return ResponseEntity.ok().build();
+
     }
 
     @GetMapping("/me")

@@ -12,7 +12,7 @@ public interface UserService {
     /**
      * Метод позволяющий изменять пароль авторизированного пользователя
      */
-    boolean setPassword(NewPasswordDto newPasswordDto, Principal principal);
+    void setPassword(NewPasswordDto newPasswordDto);
     /**
      * Данный метод дает информацию об авторизированного пользователе
      */
