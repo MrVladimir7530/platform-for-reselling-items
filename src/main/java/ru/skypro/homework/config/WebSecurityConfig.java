@@ -42,7 +42,7 @@ public class WebSecurityConfig {
 //                        .build();
 
 //        return new InMemoryUserDetailsManager(user);
-        return new AppUserDetailsManager(userRepository, passwordEncoder());
+        return new AppUserDetailsManager(userRepository);
     }
 
     @Bean

@@ -6,20 +6,20 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.stereotype.Component;
 import ru.skypro.homework.dto.RoleDto;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.repository.UserRepository;
 
 @RequiredArgsConstructor
+@Component
 public class AppUserDetailsManager implements UserDetailsManager {
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity user = userRepository.findByUsername(username);
@@ -43,6 +43,9 @@ public class AppUserDetailsManager implements UserDetailsManager {
         String encodePassword = passwordEncoder.encode(password);
         newUser.setPassword(encodePassword);
         newUser.setUsername(username);
+
+        userRepository.save(newUser);
+
     }
 
     @Override
