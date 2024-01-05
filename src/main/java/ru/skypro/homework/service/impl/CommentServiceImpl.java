@@ -38,12 +38,7 @@ public class CommentServiceImpl implements CommentService {
         CommentEntity commentEntity = commentsMapper.createOrUpdateCommentDtoAndAdEntityToCommentEntity(
                 createOrUpdateCommentDto, adEntity);
         commentRepository.save(commentEntity);
-
-
         return commentsMapper.commentsEntityToCommentDto(commentEntity);
-
-
-
     }
 
     @Override

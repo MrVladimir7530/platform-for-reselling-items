@@ -17,7 +17,7 @@ import ru.skypro.homework.service.CommentService;
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/ads/{id}/comments")
+@RequestMapping("/ads")
 public class CommentController {
     private final CommentService commentService;
     /**
@@ -27,7 +27,7 @@ public class CommentController {
      * @return ResponseEntity<CommentDto>
      */
 
-    @PostMapping()
+    @PostMapping("/ads/{id}/comments")
     public ResponseEntity<CommentDto> createComment(@PathVariable Integer adId
             , @RequestBody CreateOrUpdateCommentDto createOrUpdateCommentDto) {
 
@@ -41,7 +41,7 @@ public class CommentController {
      * @param adId
      * @return ResponseEntity<CommentsDto>
      */
-    @GetMapping()
+    @GetMapping("/ads/{id}/comments")
     public ResponseEntity<CommentsDto> getComments(@PathVariable Integer adId) {
         CommentsDto commentsDto = commentService.getComments(adId);
         return ResponseEntity.status(HttpStatus.OK).body(commentsDto);
@@ -49,29 +49,29 @@ public class CommentController {
 
     /**
      * Обновление комментария. Аргументы: Id объявления, Id комментария
-     * @param id
+     * @param adId
      * @param commentId
      * @param  createOrUpdateCommentDto
      * @return ResponseEntity<CommentDto>
      */
     //todo дописать метод контроллера
-    @PatchMapping("/{commentId}")
-    public ResponseEntity<CommentDto> editComment(@PathVariable Integer id, @PathVariable Integer commentId
+    @PatchMapping("/ads/{adId}/comments/{commentId}")
+    public ResponseEntity<CommentDto> editComment(@PathVariable Integer adId, @PathVariable Integer commentId
             , @RequestBody CreateOrUpdateCommentDto createOrUpdateCommentDto ) {
-        CommentDto commentDto = commentService.editComment(id, commentId, createOrUpdateCommentDto);
+        CommentDto commentDto = commentService.editComment(adId, commentId, createOrUpdateCommentDto);
         return ResponseEntity.status(HttpStatus.OK).body(commentDto);
     }
 
     /**
      * Удаление коммнетария. Аргументы: Id объявления, Id комментария
-     * @param id
+     * @param adId
      * @param commentId
      * @return ResponseEntity<HttpStatus>
      */
     //todo дописать метод контроллера
-    @DeleteMapping("/{commentId}")
-    public ResponseEntity<HttpStatus> deleteComment(@PathVariable Integer id, @PathVariable Integer commentId) {
-        return ResponseEntity.status(commentService.deleteComment(id, commentId)).build();
+    @DeleteMapping("/ads/{adId}/comments/{commentId}")
+    public ResponseEntity<HttpStatus> deleteComment(@PathVariable Integer adId, @PathVariable Integer commentId) {
+        return ResponseEntity.status(commentService.deleteComment(adId, commentId)).build();
     }
 
 
