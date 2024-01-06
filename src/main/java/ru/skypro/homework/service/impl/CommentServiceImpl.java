@@ -9,11 +9,14 @@ import ru.skypro.homework.dto.CommentsDto;
 import ru.skypro.homework.dto.CreateOrUpdateCommentDto;
 import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.CommentEntity;
+import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.mapper.CommentsMapper;
 import ru.skypro.homework.repository.CommentRepository;
+import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AdService;
 import ru.skypro.homework.service.CommentService;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -25,6 +28,7 @@ public class CommentServiceImpl implements CommentService {
     private final AdService adService;
     private final CommentsMapper commentsMapper;
     private final CommentRepository commentRepository;
+    private  final UserRepository userRepository;
 
 
     @Override
@@ -33,10 +37,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto createComment(Integer adId, CreateOrUpdateCommentDto createOrUpdateCommentDto) {
+    public CommentDto createComment(Integer adId, CreateOrUpdateCommentDto createOrUpdateCommentDto, Principal principal) {
         AdEntity adEntity = adService.findById(adId);
+        UserEntity userEntity = userRepository.findByUsername(principal.getName());
         CommentEntity commentEntity = commentsMapper.createOrUpdateCommentDtoAndAdEntityToCommentEntity(
-                createOrUpdateCommentDto, adEntity);
+                createOrUpdateCommentDto, adEntity, userEntity);
         commentRepository.save(commentEntity);
         return commentsMapper.commentsEntityToCommentDto(commentEntity);
     }

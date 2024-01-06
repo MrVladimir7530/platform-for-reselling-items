@@ -50,12 +50,12 @@ public class CommentsMapperTest {
     @Test
     public void shouldCorrectResultFromMethodCreateOrUpdateCommentDtoAndAdEntityToCommentEntity() {
         CommentEntity commentEntity = commentsMapper.createOrUpdateCommentDtoAndAdEntityToCommentEntity(
-                createOrUpdateCommentDtoInit, ad);
+                createOrUpdateCommentDtoInit, ad, user);
         assertNotNull(commentEntity);
         assertEquals(0, commentEntity.getPk());
         assertEquals(Date.valueOf(LocalDate.now()), commentEntity.getCreatedAt());
         assertEquals(createOrUpdateCommentDtoInit.getText(), commentEntity.getText());
-        assertEquals(ad.getUsersByAuthorId(), commentEntity.getUser());
+        assertEquals(user, commentEntity.getUser());
         assertEquals(ad, commentEntity.getAd());
     }
 

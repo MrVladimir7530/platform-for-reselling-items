@@ -9,6 +9,7 @@ import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.CommentEntity;
 import ru.skypro.homework.entity.UserEntity;
 
+import java.security.Principal;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
@@ -16,10 +17,10 @@ public interface CommentsMapper {
 
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "pk", ignore = true)
-    @Mapping(target = "user", source = "ad.usersByAuthorId")
+    @Mapping(target = "user", source = "user")
     @Mapping(target = "ad", source = "ad")
     CommentEntity createOrUpdateCommentDtoAndAdEntityToCommentEntity(CreateOrUpdateCommentDto createOrUpdateCommentDto
-            , AdEntity ad);
+            , AdEntity ad, UserEntity user);
 
     @Mapping(target = "pk", source = "commentDto.pk")
     CommentEntity commentDtoAndUsersEntityAndAdsEntityToCommentsEntity(UserEntity user

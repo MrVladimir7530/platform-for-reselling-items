@@ -13,6 +13,8 @@ import ru.skypro.homework.entity.CommentEntity;
 import ru.skypro.homework.service.AdService;
 import ru.skypro.homework.service.CommentService;
 
+import java.security.Principal;
+
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
@@ -27,11 +29,11 @@ public class CommentController {
      * @return ResponseEntity<CommentDto>
      */
 
-    @PostMapping("/ads/{id}/comments")
+    @PostMapping("/{id}/comments")
     public ResponseEntity<CommentDto> createComment(@PathVariable Integer adId
-            , @RequestBody CreateOrUpdateCommentDto createOrUpdateCommentDto) {
+            , @RequestBody CreateOrUpdateCommentDto createOrUpdateCommentDto, Principal principal) {
 
-        CommentDto commentDto = commentService.createComment(adId, createOrUpdateCommentDto);
+        CommentDto commentDto = commentService.createComment(adId, createOrUpdateCommentDto, principal);
 
         return ResponseEntity.status(HttpStatus.OK).body(commentDto);
     }
@@ -41,7 +43,8 @@ public class CommentController {
      * @param adId
      * @return ResponseEntity<CommentsDto>
      */
-    @GetMapping("/ads/{id}/comments")
+    //todo  добавить проверку на админа/собственника
+    @GetMapping("/{id}/comments")
     public ResponseEntity<CommentsDto> getComments(@PathVariable Integer adId) {
         CommentsDto commentsDto = commentService.getComments(adId);
         return ResponseEntity.status(HttpStatus.OK).body(commentsDto);
@@ -54,8 +57,8 @@ public class CommentController {
      * @param  createOrUpdateCommentDto
      * @return ResponseEntity<CommentDto>
      */
-    //todo дописать метод контроллера
-    @PatchMapping("/ads/{adId}/comments/{commentId}")
+    //todo  добавить проверку на админа/собственника
+    @PatchMapping("/{adId}/comments/{commentId}")
     public ResponseEntity<CommentDto> editComment(@PathVariable Integer adId, @PathVariable Integer commentId
             , @RequestBody CreateOrUpdateCommentDto createOrUpdateCommentDto ) {
         CommentDto commentDto = commentService.editComment(adId, commentId, createOrUpdateCommentDto);
@@ -68,8 +71,8 @@ public class CommentController {
      * @param commentId
      * @return ResponseEntity<HttpStatus>
      */
-    //todo дописать метод контроллера
-    @DeleteMapping("/ads/{adId}/comments/{commentId}")
+    //todo добавить проверку на админа/собственника
+    @DeleteMapping("/{adId}/comments/{commentId}")
     public ResponseEntity<HttpStatus> deleteComment(@PathVariable Integer adId, @PathVariable Integer commentId) {
         return ResponseEntity.status(commentService.deleteComment(adId, commentId)).build();
     }
