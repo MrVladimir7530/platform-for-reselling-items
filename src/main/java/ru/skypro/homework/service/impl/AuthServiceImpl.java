@@ -30,11 +30,6 @@ public class AuthServiceImpl implements AuthService {
             return false;
         }
         return encoder.matches(password, user.getPassword());
-//        if (!manager.userExists(userName)) {
-//            return false;
-//        }
-//        UserDetails userDetails = manager.loadUserByUsername(userName);
-//        return encoder.matches(password, userDetails.getPassword());
     }
 
     @Override
@@ -46,21 +41,9 @@ public class AuthServiceImpl implements AuthService {
         }
         String encode = encoder.encode(registerDto.getPassword());
 
-        user.setRole(registerDto.getRoleDto());
         user.setEmail(registerDto.getUsername());
         user.setPassword(encode);
         userRepository.save(user);
-
-//        if (manager.userExists(registerDto.getUsername())) {
-//            return false;
-//        }
-//        UserDetails build = User.builder()
-//                .passwordEncoder(this.encoder::encode)
-//                .password(registerDto.getPassword())
-//                .username(registerDto.getUsername())
-//                .roles(registerDto.getRoleDto().name())
-//                .build();
-//        manager.createUser(build);
         return true;
     }
 

@@ -16,7 +16,6 @@ public interface UserMapper {
     UpdateUserDto toUpdateUserDto(UserEntity user);
 
     @Mapping(target = "password", ignore = true)
-//    @Mapping(target = "role", source = "registerDto.roleDto")
     UserEntity fromUserRegisterDto(RegisterDto registerDto);
 
 }
