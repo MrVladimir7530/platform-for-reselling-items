@@ -14,5 +14,5 @@ public class RegisterDto {
     private String lastName;
     private String phone;
     @Enumerated(EnumType.STRING)
-    private RoleDto role;
+    private Role role;
 }

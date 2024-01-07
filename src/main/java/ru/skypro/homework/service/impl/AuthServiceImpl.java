@@ -2,13 +2,9 @@ package ru.skypro.homework.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.RegisterDto;
-import ru.skypro.homework.dto.RoleDto;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.repository.UserRepository;
@@ -46,5 +42,4 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
         return true;
     }
-
 }

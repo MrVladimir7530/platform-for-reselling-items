@@ -1,17 +1,14 @@
 package ru.skypro.homework.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
-import org.springframework.stereotype.Component;
-import ru.skypro.homework.dto.RoleDto;
+import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.repository.UserRepository;
 
@@ -28,7 +25,7 @@ public class AppUserDetailsManager implements UserDetailsManager {
         return User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
-                .roles(RoleDto.USER.name())
+                .roles(Role.USER.name())
                 .build();
     }
 
