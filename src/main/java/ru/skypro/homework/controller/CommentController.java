@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.dto.CommentsDto;
 import ru.skypro.homework.dto.CreateOrUpdateCommentDto;
-import ru.skypro.homework.entity.AdEntity;
-import ru.skypro.homework.entity.CommentEntity;
-import ru.skypro.homework.service.AdService;
+import ru.skypro.homework.filter.CheckAccess;
 import ru.skypro.homework.service.CommentService;
 
 import java.security.Principal;
@@ -22,12 +22,14 @@ import java.security.Principal;
 @RequestMapping("/ads")
 public class CommentController {
     private final CommentService commentService;
+    private final CheckAccess checkAccess;
     /**
      * Создание коментария. Аргументы: Id объявления и текст комментария.
      * @param adId
      * @param  createOrUpdateCommentDto
      * @return ResponseEntity<CommentDto>
      */
+
 
     @PostMapping("/{id}/comments")
     public ResponseEntity<CommentDto> createComment(@PathVariable Integer adId
@@ -57,10 +59,10 @@ public class CommentController {
      * @param  createOrUpdateCommentDto
      * @return ResponseEntity<CommentDto>
      */
-    //todo  добавить проверку на админа/собственника
+    @PreAuthorize("@checkAccess.isAdminOrOwnerComment(#commentId, #authentication)")
     @PatchMapping("/{adId}/comments/{commentId}")
     public ResponseEntity<CommentDto> editComment(@PathVariable Integer adId, @PathVariable Integer commentId
-            , @RequestBody CreateOrUpdateCommentDto createOrUpdateCommentDto ) {
+            , @RequestBody CreateOrUpdateCommentDto createOrUpdateCommentDto, Authentication authentication ) {
         CommentDto commentDto = commentService.editComment(adId, commentId, createOrUpdateCommentDto);
         return ResponseEntity.status(HttpStatus.OK).body(commentDto);
     }
@@ -72,8 +74,10 @@ public class CommentController {
      * @return ResponseEntity<HttpStatus>
      */
     //todo добавить проверку на админа/собственника
+    @PreAuthorize("@checkAccess.isAdminOrOwnerComment(#commentId, #authentication)")
     @DeleteMapping("/{adId}/comments/{commentId}")
-    public ResponseEntity<HttpStatus> deleteComment(@PathVariable Integer adId, @PathVariable Integer commentId) {
+    public ResponseEntity<HttpStatus> deleteComment(@PathVariable Integer adId, @PathVariable Integer commentId
+            , Authentication authentication) {
         return ResponseEntity.status(commentService.deleteComment(adId, commentId)).build();
     }
 
