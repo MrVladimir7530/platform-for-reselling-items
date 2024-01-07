@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.config.AppUserDetailsManager;
@@ -32,7 +34,7 @@ public class UserServiceTest {
     private UserRepository userRepository;
     private UserService userService;
     private MultipartFile multipartFile;
-    private AppUserDetailsManager appUserDetailsManager;
+    private PasswordEncoder passwordEncoder;
     Principal principal;
     Integer id = 1;
     String username = "vladimir@mail";
@@ -43,10 +45,11 @@ public class UserServiceTest {
 
     @BeforeEach
     public void init() {
+        passwordEncoder = new BCryptPasswordEncoder();
         imagesRepository = Mockito.mock(ImagesRepository.class);
         userRepository = Mockito.mock(UserRepository.class);
         multipartFile = Mockito.mock(MultipartFile.class);
-        userService = new UserServiceImpl(userRepository, imagesRepository, appUserDetailsManager);
+        userService = new UserServiceImpl(userRepository, imagesRepository, passwordEncoder);
         principal = () -> username;
     }
 

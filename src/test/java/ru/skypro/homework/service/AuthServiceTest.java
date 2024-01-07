@@ -6,7 +6,7 @@ import org.mockito.Mockito;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.skypro.homework.dto.RegisterDto;
-import ru.skypro.homework.dto.Role;
+import ru.skypro.homework.model.Role;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.impl.AuthServiceImpl;

@@ -1,6 +1,6 @@
 package ru.skypro.homework.initialization;
 
-import ru.skypro.homework.dto.Role;
+import ru.skypro.homework.model.Role;
 import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.CommentEntity;
 import ru.skypro.homework.entity.ImageEntity;
