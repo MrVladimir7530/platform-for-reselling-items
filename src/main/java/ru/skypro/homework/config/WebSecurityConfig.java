@@ -21,7 +21,6 @@ import javax.sql.DataSource;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
-@EnableWebSecurity(debug = true)
 public class WebSecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
@@ -34,17 +33,8 @@ public class WebSecurityConfig {
     };
 
     @Bean
-    public UserDetailsManager userDetailsService(UserRepository userRepository) {
-//        UserDetails user =
-//                User.builder()
-//                        .username("user@gmail.com")
-//                        .password("password")
-//                        .passwordEncoder(passwordEncoder::encode)
-//                        .roles(RoleDto.USER.name())
-//                        .build();
-
-//        return new InMemoryUserDetailsManager(user);
-        return new AppUserDetailsManager(userRepository);
+    public UserDetailsManager userDetailsService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        return new AppUserDetailsManager(userRepository, passwordEncoder);
     }
 
     @Bean
