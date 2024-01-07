@@ -7,6 +7,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.config.AppUserDetailsManager;
@@ -36,7 +37,7 @@ public class UserServiceImpl implements UserService {
     private String avatarPath;
     private final UserRepository userRepository;
     private final ImagesRepository imagesRepository;
-    private final AppUserDetailsManager appUserDetailsManager;
+    private final UserDetailsManager appUserDetailsManager;
 
     @Override
     public void setPassword(NewPasswordDto newPasswordDto) {

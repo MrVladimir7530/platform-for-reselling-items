@@ -1,12 +1,12 @@
 package ru.skypro.homework.service;
 
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import ru.skypro.homework.config.AppUserDetailsManager;
 import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UpdateUserDto;
@@ -104,6 +104,21 @@ public class UserServiceTest {
         assertEquals(userDto, userDtoResult);
     }
 
+    @Test
+    public void updateAvatarUserTest() throws IOException {
+        MockMultipartFile file = new MockMultipartFile( "file",
+                "hello.jpg",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes());
+
+        when(userRepository.findByUsername(anyString())).thenReturn(getUser());
+        when(userRepository.save(any(UserEntity.class))).thenReturn(getUser());
+
+        ReflectionTestUtils.setField(userService, "avatarPath", "C:\\avatar");
+
+        String s = userService.updateAvatarUser(file, principal);
+
+    }
 
 //    @Test
 //    public void updateAvatarUserTest() throws IOException {

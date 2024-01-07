@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -35,17 +36,8 @@ public class WebSecurityConfig {
     };
 
     @Bean
-    public UserDetailsManager userDetailsService(UserRepository userRepository) {
-//        UserDetails user =
-//                User.builder()
-//                        .username("user@gmail.com")
-//                        .password("password")
-//                        .passwordEncoder(passwordEncoder::encode)
-//                        .roles(RoleDto.USER.name())
-//                        .build();
-
-//        return new InMemoryUserDetailsManager(user);
-        return new AppUserDetailsManager(userRepository, passwordEncoder());
+    public UserDetailsManager userDetailsService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        return new AppUserDetailsManager(userRepository, passwordEncoder);
     }
 
     @Bean

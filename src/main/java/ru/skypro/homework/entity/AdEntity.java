@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "ads", schema = "public", catalog = "platformForResellingItems")
+@Table(name = "ads")
 public class AdEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

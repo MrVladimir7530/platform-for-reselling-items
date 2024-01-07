@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 @Data
 @Entity
-@Table(name = "comments", schema = "public", catalog = "platformForResellingItems")
+@Table(name = "comments")
 public class CommentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

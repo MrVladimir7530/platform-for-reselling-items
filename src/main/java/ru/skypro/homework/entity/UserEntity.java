@@ -2,13 +2,14 @@ package ru.skypro.homework.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import ru.skypro.homework.dto.RoleDto;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Data
 @Entity
-@Table(name = "users", schema = "public", catalog = "platformForResellingItems")
+@Table(name = "users")
 public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -20,7 +21,8 @@ public class UserEntity {
     private String lastName;
     private String password;
     private String phone;
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private RoleDto role;
     private String email;
     @OneToOne
     @JoinColumn(name = "image")
