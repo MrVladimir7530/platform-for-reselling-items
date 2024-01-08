@@ -66,7 +66,10 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public Boolean deleteAd(Integer adId) {
-        return null;
+        AdEntity adEntity = adRepository.findById(adId)
+                .orElseThrow(()->new NoSuchElementException());
+        adRepository.delete(adEntity);
+        return true;
     }
 
     @Override
