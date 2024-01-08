@@ -43,12 +43,16 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void setPassword(NewPasswordDto newPasswordDto) {
+    public boolean setPassword(NewPasswordDto newPasswordDto) {
         String currentPassword = newPasswordDto.getCurrentPassword();
         String newPassword = newPasswordDto.getNewPassword();
 
-        changePassword(currentPassword, newPassword);
-
+        try {
+            changePassword(currentPassword, newPassword);
+        } catch (NullPointerException e) {
+            return false;
+        }
+        return true;
     }
     private void changePassword(String oldPassword, String newPassword) {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();

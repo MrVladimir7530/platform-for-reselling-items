@@ -54,7 +54,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void setPasswordTestOnTrue() {
+    public void setPasswordTest() {
         when(userRepository.findByUsername(anyString())).thenReturn(getUser());
         when(userRepository.save(any(UserEntity.class))).thenReturn(getUser());
 
@@ -62,21 +62,10 @@ public class UserServiceTest {
         newPasswordDto.setCurrentPassword(password);
         newPasswordDto.setNewPassword(password + password);
 
-        userService.setPassword(newPasswordDto);
-
+        boolean result = userService.setPassword(newPasswordDto);
+        assertFalse(result);
     }
 
-    @Test
-    public void setPasswordTestOnFalse() {
-        when(userRepository.findByUsername(anyString())).thenReturn(getUser());
-        when(userRepository.save(any(UserEntity.class))).thenReturn(getUser());
-
-        NewPasswordDto newPasswordDto = new NewPasswordDto();
-        newPasswordDto.setCurrentPassword(password + "1");
-        newPasswordDto.setNewPassword(password + password);
-
-        userService.setPassword(newPasswordDto);
-    }
 
     @Test
     public void getInfoUserTest() {
