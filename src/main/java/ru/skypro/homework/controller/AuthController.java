@@ -23,8 +23,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
         if (authService.login(loginDto.getUsername(), loginDto.getPassword())) {
+            log.info("user logged in");
             return ResponseEntity.ok().build();
         } else {
+            log.info("user is not logged in");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
@@ -32,8 +34,10 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
         if (authService.register(registerDto)) {
+            log.info("user has registered");
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
+            log.info("user has not registered");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
