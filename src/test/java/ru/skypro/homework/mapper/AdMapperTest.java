@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ru.skypro.homework.dto.AdDto;
 import ru.skypro.homework.dto.ExtendedAdDto;
 import ru.skypro.homework.dto.PropertiesDto;
-import ru.skypro.homework.dto.RoleDto;
 import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.ImageEntity;
 import ru.skypro.homework.entity.UserEntity;

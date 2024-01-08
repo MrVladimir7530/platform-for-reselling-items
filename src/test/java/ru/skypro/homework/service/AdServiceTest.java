@@ -1,10 +1,9 @@
 package ru.skypro.homework.service;
 
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.skypro.homework.dto.RoleDto;
+import ru.skypro.homework.model.Role;
 import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.ImageEntity;
 import ru.skypro.homework.entity.UserEntity;
@@ -40,7 +39,7 @@ public class AdServiceTest {
         user.setLastName("Test");
         user.setPassword("password");
         user.setPhone("phone");
-        user.setRole(RoleDto.USER);
+        user.setRole(Role.USER);
         user.setImageEntity(imageInit);
         user.setEmail("email");
 

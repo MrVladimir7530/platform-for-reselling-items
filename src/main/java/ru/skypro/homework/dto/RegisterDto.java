@@ -1,6 +1,7 @@
 package ru.skypro.homework.dto;
 
 import lombok.Data;
+import ru.skypro.homework.model.Role;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -14,5 +15,5 @@ public class RegisterDto {
     private String lastName;
     private String phone;
     @Enumerated(EnumType.STRING)
-    private RoleDto role;
+    private Role role;
 }

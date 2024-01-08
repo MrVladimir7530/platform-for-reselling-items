@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -37,15 +39,32 @@ public class UserServiceImpl implements UserService {
     private String avatarPath;
     private final UserRepository userRepository;
     private final ImagesRepository imagesRepository;
-    private final UserDetailsManager appUserDetailsManager;
+    private final PasswordEncoder passwordEncoder;
+
 
     @Override
-    public void setPassword(NewPasswordDto newPasswordDto) {
+    public boolean setPassword(NewPasswordDto newPasswordDto) {
         String currentPassword = newPasswordDto.getCurrentPassword();
         String newPassword = newPasswordDto.getNewPassword();
 
-        appUserDetailsManager.changePassword(currentPassword, newPassword);
+        try {
+            changePassword(currentPassword, newPassword);
+        } catch (NullPointerException e) {
+            return false;
+        }
+        return true;
+    }
+    private void changePassword(String oldPassword, String newPassword) {
+        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+        String name = currentUser.getName();
+        UserEntity user = userRepository.findByUsername(name);
 
+        if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+            String encodeNewPassword = passwordEncoder.encode(newPassword);
+            user.setPassword(encodeNewPassword);
+
+            userRepository.save(user);
+        }
     }
 
     @Override

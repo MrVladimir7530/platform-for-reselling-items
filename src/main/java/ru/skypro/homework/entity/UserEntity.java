@@ -2,7 +2,7 @@ package ru.skypro.homework.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import ru.skypro.homework.dto.RoleDto;
+import ru.skypro.homework.model.Role;
 
 import javax.persistence.*;
 import java.util.List;
@@ -22,7 +22,7 @@ public class UserEntity {
     private String password;
     private String phone;
     @Enumerated(EnumType.STRING)
-    private RoleDto role;
+    private Role role;
     private String email;
     @OneToOne
     @JoinColumn(name = "image")

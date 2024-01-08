@@ -1,6 +1,6 @@
 package ru.skypro.homework.initialization;
 
-import ru.skypro.homework.dto.RoleDto;
+import ru.skypro.homework.model.Role;
 import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.CommentEntity;
 import ru.skypro.homework.entity.ImageEntity;
@@ -31,7 +31,7 @@ public final class EntityInitialization {
         userEntity.setLastName("Test");
         userEntity.setPassword("password");
         userEntity.setPhone("phone");
-        userEntity.setRole(RoleDto.USER);
+        userEntity.setRole(Role.USER);
         userEntity.setImageEntity(imageEntity);
         userEntity.setEmail("email");
 
@@ -64,7 +64,7 @@ public final class EntityInitialization {
         userEntity.setLastName("Test");
         userEntity.setPassword("password");
         userEntity.setPhone("phone");
-        userEntity.setRole(RoleDto.USER);
+        userEntity.setRole(Role.USER);
         userEntity.setImageEntity(imageEntity);
         userEntity.setEmail("email");
 
