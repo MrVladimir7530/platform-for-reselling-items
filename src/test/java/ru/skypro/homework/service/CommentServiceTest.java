@@ -50,9 +50,9 @@ public class CommentServiceTest {
     public void init() {
         commentsMapper = new CommentsMapperImpl();
         adRepositoryMock = mock(AdRepository.class);
-        adService = new AdServiceImpl(adRepositoryMock);
         commentRepositoryMock = mock(CommentRepository.class);
         userRepositoryMock = mock(UserRepository.class);
+        adService = new AdServiceImpl(userRepositoryMock, adRepositoryMock);
         out = new CommentServiceImpl(adService, commentsMapper, commentRepositoryMock, userRepositoryMock);
         principalMock = mock(Principal.class);
 

@@ -8,6 +8,7 @@ import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.ImageEntity;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.repository.AdRepository;
+import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.impl.AdServiceImpl;
 
 import java.util.Optional;
@@ -18,6 +19,7 @@ import static org.mockito.Mockito.*;
 public class AdServiceTest {
 
     private AdRepository adRepositoryMock;
+    private UserRepository userRepositoryMock;
     private AdService out;
     private final AdEntity adEntityInit = new AdEntity();
     private final UserEntity user = new UserEntity();
@@ -26,7 +28,8 @@ public class AdServiceTest {
     @BeforeEach
     public void init() {
         adRepositoryMock = mock(AdRepository.class);
-        out = new AdServiceImpl(adRepositoryMock);
+        userRepositoryMock = mock(UserRepository.class);
+        out = new AdServiceImpl(userRepositoryMock, adRepositoryMock);
 
         imageInit.setId(1);
         imageInit.setPath("Какой-то путь");
