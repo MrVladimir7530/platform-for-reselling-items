@@ -7,11 +7,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
+import ru.skypro.homework.service.AdService;
+
+import java.security.Principal;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/ads")
 public class AdsController {
+    private final AdService adService;
+    /**
+     * Получение всех объявлений
+     * @return ResponseEntity<AdsDto>
+     */
+    @GetMapping()
+    public ResponseEntity<AdsDto> getAds(Principal principal) {
+        AdsDto allAds = adService.getAllAds(principal);
+        return ResponseEntity.ok(allAds);
+    }
+
     /**
      * Создание объявленияю Аргументы: CreateOrUpdateAdDto(title-заголовок объявления,
      * price - цена объявления, description - описание объявления), image - изображение
@@ -19,18 +34,9 @@ public class AdsController {
      * @param image
      * @return ResponseEntity<AdDto>
      */
-    @PostMapping("/ads")
+    @PostMapping()
     public ResponseEntity<AdDto> createAd(@RequestBody CreateOrUpdateAdDto createOrUpdateAdDto
             , @RequestParam MultipartFile image) {
-        return null;
-    }
-
-    /**
-     * Получение всех объявлений
-     * @return ResponseEntity<AdsDto>
-     */
-    @GetMapping("/ads")
-    public ResponseEntity<AdsDto> getAds() {
         return null;
     }
 
@@ -38,7 +44,7 @@ public class AdsController {
      * Получение объявлений авторизованного пользователя
      * @return ResponseEntity<AdsDto>
      */
-    @GetMapping("/ads/me")
+    @GetMapping("/me")
     public ResponseEntity<AdsDto> getMyAds() {
         return null;
     }
@@ -48,7 +54,7 @@ public class AdsController {
      * @param adId
      * @return ResponseEntity<ExtendedAdDto>
      */
-    @GetMapping("/ads/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<ExtendedAdDto> getAdInfo(@PathVariable Integer adId) {
         return null;
     }
@@ -58,7 +64,7 @@ public class AdsController {
      * @param adId
      * @return ResponseEntity<CreateOrUpdateAdDto>
      */
-    @PatchMapping("/ads/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<CreateOrUpdateAdDto> editAd(@PathVariable Integer adId) {
         return null;
     }
@@ -69,7 +75,7 @@ public class AdsController {
      * @param image
      * @return ResponseEntity<CreateOrUpdateAdDto
      */
-    @PatchMapping("/ads/{id}/image")
+    @PatchMapping("/{id}/image")
     public ResponseEntity<CreateOrUpdateAdDto> editAdImage(@PathVariable Integer adId
             , @RequestParam MultipartFile image) {
         return null;
@@ -80,7 +86,7 @@ public class AdsController {
      * @param adId
      * @return ResponseEntity<HttpStatus>
      */
-    @DeleteMapping("/ads/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteAd(@PathVariable Integer adId) {
         return null;
     }

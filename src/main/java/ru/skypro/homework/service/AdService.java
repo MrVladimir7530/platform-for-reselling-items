@@ -8,11 +8,13 @@ import ru.skypro.homework.dto.CreateOrUpdateAdDto;
 import ru.skypro.homework.dto.ExtendedAdDto;
 import ru.skypro.homework.entity.AdEntity;
 
+import java.security.Principal;
+
 public interface AdService {
 
     AdEntity findById(Integer id);
 
-    AdsDto getAllAds();
+    AdsDto getAllAds(Principal principal);
 
     AdDto addNewAd(MultipartFile multipartFile, MultipartFile image);
 
