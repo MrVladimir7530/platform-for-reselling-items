@@ -38,6 +38,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDto createComment(Integer adId, CreateOrUpdateCommentDto createOrUpdateCommentDto, Principal principal) {
+        log.info("Was invoked method for creation of comment");
         AdEntity adEntity = adService.findById(adId);
         UserEntity userEntity = userRepository.findByUsername(principal.getName());
         CommentEntity commentEntity = commentsMapper.createOrUpdateCommentDtoAndAdEntityToCommentEntity(

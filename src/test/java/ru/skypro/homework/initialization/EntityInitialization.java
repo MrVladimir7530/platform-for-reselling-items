@@ -31,7 +31,7 @@ public final class EntityInitialization {
         userEntity.setLastName("Test");
         userEntity.setPassword("password");
         userEntity.setPhone("phone");
-        userEntity.setRole(RoleDto.USER.toString());
+        userEntity.setRole(RoleDto.USER);
         userEntity.setImageEntity(imageEntity);
         userEntity.setEmail("email");
 
@@ -44,7 +44,7 @@ public final class EntityInitialization {
         userEntity.setLastName("Test");
         userEntity.setPassword("password");
         userEntity.setPhone("phone");
-        userEntity.setRole(RoleDto.USER.toString());
+        userEntity.setRole(RoleDto.USER);
         userEntity.setImageEntity(imageEntity);
         userEntity.setEmail("email");
 
@@ -64,7 +64,7 @@ public final class EntityInitialization {
         userEntity.setLastName("Test");
         userEntity.setPassword("password");
         userEntity.setPhone("phone");
-        userEntity.setRole(RoleDto.USER.toString());
+        userEntity.setRole(RoleDto.USER);
         userEntity.setImageEntity(imageEntity);
         userEntity.setEmail("email");
 

@@ -40,7 +40,7 @@ public class AdServiceTest {
         user.setLastName("Test");
         user.setPassword("password");
         user.setPhone("phone");
-        user.setRole(RoleDto.USER.toString());
+        user.setRole(RoleDto.USER);
         user.setImageEntity(imageInit);
         user.setEmail("email");
 

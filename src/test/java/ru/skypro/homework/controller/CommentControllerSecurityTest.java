@@ -22,6 +22,7 @@ import org.springframework.web.context.WebApplicationContext;
 import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.dto.CreateOrUpdateCommentDto;
 import ru.skypro.homework.entity.CommentEntity;
+import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.filter.CheckAccess;
 import ru.skypro.homework.initialization.EntityInitialization;
 import ru.skypro.homework.mapper.CommentsMapper;
@@ -61,14 +62,15 @@ public class CommentControllerSecurityTest {
     private AdRepository adRepositoryMock;
     @SpyBean
     private AdServiceImpl adServiceSpy;
-    @MockBean
-    private CheckAccess checkAccessMock;
+    @SpyBean
+    private CheckAccess checkAccessSpy;
     @InjectMocks
     private CommentController commentController;
 
     private CreateOrUpdateCommentDto createOrUpdateCommentDtoInit;
     private CommentDto commentDtoInit;
     private CommentEntity commentEntityInit;
+    private UserEntity userEntityInit;
 
 
     @BeforeEach
@@ -79,15 +81,18 @@ public class CommentControllerSecurityTest {
                 .build();
 
         commentEntityInit = EntityInitialization.getCommentEntity();
+        userEntityInit = EntityInitialization.getUserEntity();
 
     }
 
     //(expected = AuthenticationCredentialsNotFoundException.class)
+//    (username = "admin", roles = {"USER", "ADMIN"})
     @Test
-    @WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
-    public void shouldCorrectResultFromMethodEditComment() throws Exception {
+    @WithMockUser(username = "UserTest")
+    public void shouldCorrectResultFromMethodEditCommentWhenUserIsOwner() throws Exception {
         when(commentRepositoryMock.findById(anyInt())).thenReturn(Optional.of(commentEntityInit));
-        when(commentRepositoryMock.save(any(CommentEntity.class))).thenReturn(any(CommentEntity.class));
+        when(commentRepositoryMock.save(any(CommentEntity.class))).thenReturn(commentEntityInit);
+        when(userRepositoryMock.findByUsername(anyString())).thenReturn(userEntityInit);
 
         String text = "someText";
         JSONObject createOrUpdateCommentDto = new JSONObject();
@@ -107,7 +112,7 @@ public class CommentControllerSecurityTest {
                 .andExpect(jsonPath("$.text").value(text));
 
 
-        verify(commentRepositoryMock, times(1)).findById(anyInt());
+        verify(commentRepositoryMock, times(2)).findById(anyInt());
         verify(commentRepositoryMock, times(1)).save(any(CommentEntity.class));
     }
 
