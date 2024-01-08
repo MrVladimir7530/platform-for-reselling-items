@@ -64,7 +64,6 @@ public class CommentController {
                     )
             }, tags = "Комментарии"
     )
-    //todo  добавить проверку на админа/собственника
     @GetMapping("/{id}/comments")
     public ResponseEntity<CommentsDto> getComments(@PathVariable Integer id) {
         log.info("Was invoked method for get of comments in CommentController");
@@ -109,12 +108,12 @@ public class CommentController {
                     )
             }, tags = "Комментарии"
     )
-    //todo добавить проверку на админа/собственника
+
     @PreAuthorize("@checkAccess.isAdminOrOwnerComment(#commentId, authentication)")
     @DeleteMapping("/{adId}/comments/{commentId}")
     public ResponseEntity<HttpStatus> deleteComment(
             @PathVariable Integer adId,
-            @PathVariable Integer commentId){
+            @PathVariable Integer commentId) {
         log.info("Was invoked method for delete of comment in CommentController");
         return ResponseEntity.status(commentService.deleteComment(adId, commentId)).build();
     }

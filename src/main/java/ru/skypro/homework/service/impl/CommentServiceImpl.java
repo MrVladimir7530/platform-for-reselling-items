@@ -49,6 +49,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentsDto getComments(Integer adId) {
+        log.info("Was invoked method for get of comments in CommentServiceImpl");
         AdEntity adEntity = adService.findById(adId);
         List<CommentEntity> commentEntityList = adEntity.getComments();
         List<CommentDto> commentDtoList = commentsMapper.listCommentEntityToListCommentDto(commentEntityList);
@@ -58,6 +59,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDto editComment(Integer adId, Integer commentId, CreateOrUpdateCommentDto createOrUpdateCommentDto) {
+        log.info("Was invoked method for update of comment in CommentServiceImpl");
         CommentEntity commentEntity = commentRepository.findById(commentId).orElseThrow(NoSuchElementException::new);
 
         commentEntity.setText(createOrUpdateCommentDto.getText());
@@ -67,6 +69,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public HttpStatus deleteComment(Integer adId, Integer commentId) {
+        log.info("Was invoked method for delete of comment in CommentServiceImpl");
         try {
             commentRepository.deleteById(commentId);
             return HttpStatus.OK;

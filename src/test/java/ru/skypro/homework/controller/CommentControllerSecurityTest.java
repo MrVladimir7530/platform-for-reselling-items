@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.dto.CreateOrUpdateCommentDto;
+import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.CommentEntity;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.filter.CheckAccess;
@@ -33,6 +34,9 @@ import ru.skypro.homework.service.impl.AdServiceImpl;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -70,7 +74,10 @@ public class CommentControllerSecurityTest {
     private CreateOrUpdateCommentDto createOrUpdateCommentDtoInit;
     private CommentDto commentDtoInit;
     private CommentEntity commentEntityInit;
+    private CommentEntity commentEntityInit2;
     private UserEntity userEntityInit;
+    private AdEntity adEntityInit;
+    private final List<CommentEntity> commentEntityList = new ArrayList<>();
 
 
     @BeforeEach
@@ -80,8 +87,13 @@ public class CommentControllerSecurityTest {
                 .apply(springSecurity())
                 .build();
 
-        commentEntityInit = EntityInitialization.getCommentEntity();
         userEntityInit = EntityInitialization.getUserEntity();
+        commentEntityInit = EntityInitialization.getCommentEntity();
+        commentEntityInit2 = EntityInitialization.getCommentEntity();
+        commentEntityInit2.setPk(2);
+        adEntityInit = EntityInitialization.getAdEntity();
+        adEntityInit.setComments(commentEntityList);
+
 
     }
 
@@ -89,6 +101,60 @@ public class CommentControllerSecurityTest {
 //    (username = "admin", roles = {"USER", "ADMIN"})
     @Test
     @WithMockUser(username = "UserTest")
+    //todo поправить тест
+    public void shouldCorrectResultFromMethodCreateComment() throws Exception {
+        when(adRepositoryMock.findById(anyInt())).thenReturn(Optional.of(adEntityInit));
+        when(userRepositoryMock.findByUsername(anyString())).thenReturn(userEntityInit);
+        when(commentRepositoryMock.save(any(CommentEntity.class))).thenReturn(commentEntityInit);
+
+        String text = "someText";
+        JSONObject createOrUpdateCommentDto = new JSONObject();
+        createOrUpdateCommentDto.put("text", text);
+
+        mvc.perform(MockMvcRequestBuilders
+                        .post("/ads/1/comments")
+                        .content(createOrUpdateCommentDto.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.author").value(userEntityInit.getId()))
+                .andExpect(jsonPath("$.authorImage").value(userEntityInit.getImageEntity().getPath()))
+                .andExpect(jsonPath("$.authorFirstName").value(userEntityInit.getFirstName()))
+                .andExpect(jsonPath("$.createdAt").value(Date.valueOf(LocalDate.now())))
+                .andExpect(jsonPath("$.text").value(text));
+
+
+        verify(adRepositoryMock, times(1)).findById(anyInt());
+        verify(userRepositoryMock, times(1)).findByUsername(anyString());
+        verify(commentRepositoryMock, times(1)).save(any(CommentEntity.class));
+
+    }
+    @Test
+    public void shouldTrowStatus403FromMethodCreateComment() throws Exception {
+        when(adRepositoryMock.findById(anyInt())).thenReturn(Optional.of(adEntityInit));
+        when(userRepositoryMock.findByUsername(anyString())).thenReturn(userEntityInit);
+        when(commentRepositoryMock.save(any(CommentEntity.class))).thenReturn(commentEntityInit);
+
+        String text = "someText";
+        JSONObject createOrUpdateCommentDto = new JSONObject();
+        createOrUpdateCommentDto.put("text", text);
+
+        mvc.perform(MockMvcRequestBuilders
+                        .post("/ads/1/comments")
+                        .content(createOrUpdateCommentDto.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+
+
+        verify(adRepositoryMock, times(0)).findById(anyInt());
+        verify(userRepositoryMock, times(0)).findByUsername(anyString());
+        verify(commentRepositoryMock, times(0)).save(any(CommentEntity.class));
+
+    }
+    @Test
+    @WithMockUser(username = "UserTest")
+    //todo поправить тест
     public void shouldCorrectResultFromMethodEditCommentWhenUserIsOwner() throws Exception {
         when(commentRepositoryMock.findById(anyInt())).thenReturn(Optional.of(commentEntityInit));
         when(commentRepositoryMock.save(any(CommentEntity.class))).thenReturn(commentEntityInit);
@@ -108,12 +174,41 @@ public class CommentControllerSecurityTest {
                 .andExpect(jsonPath("$.authorImage").value(commentEntityInit.getUser().getImageEntity().getPath()))
                 .andExpect(jsonPath("$.authorFirstName").value(commentEntityInit.getUser().getFirstName()))
                 .andExpect(jsonPath("$.createdAt").value(commentEntityInit.getCreatedAt()))
-                .andExpect(jsonPath("$.createdAt").value(commentEntityInit.getPk()))
+                .andExpect(jsonPath("$.pk").value(commentEntityInit.getPk()))
                 .andExpect(jsonPath("$.text").value(text));
 
 
         verify(commentRepositoryMock, times(2)).findById(anyInt());
         verify(commentRepositoryMock, times(1)).save(any(CommentEntity.class));
+        verify(userRepositoryMock, times(1)).findByUsername(anyString());
+    }
+    @Test
+    @WithMockUser(username = "UserTest")
+    public void shouldCorrectResultFromMethodGetComments() throws Exception {
+        when(adRepositoryMock.findById(anyInt())).thenReturn(Optional.of(adEntityInit));
+
+        mvc.perform(MockMvcRequestBuilders
+                        .get("/ads/1/comments")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.count").value(adEntityInit.getComments().size()));
+
+        verify(adRepositoryMock, times(1)).findById(anyInt());
+    }
+    @Test
+    @WithMockUser(username = "UserTest")
+    //todo поправить тест
+    public void shouldCorrectResultFromMethodDeleteComment() throws Exception {
+        when(userRepositoryMock.findByUsername(anyString())).thenReturn(userEntityInit);
+        when(commentRepositoryMock.findById(anyInt())).thenReturn(Optional.of(commentEntityInit));
+
+        doNothing().when(commentRepositoryMock).deleteById(anyInt());
+
+        mvc.perform(MockMvcRequestBuilders
+                        .delete("/ads/1/comments/1"))
+                .andExpect(status().isOk());
+
+        verify(commentRepositoryMock, times(1)).deleteById(anyInt());
     }
 
 }
