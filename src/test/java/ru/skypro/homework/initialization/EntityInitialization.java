@@ -38,6 +38,16 @@ public final class EntityInitialization {
         return userEntity;
     }
     public static AdEntity getAdEntity() {
+        userEntity.setId(1);
+        userEntity.setUsername("UserTest");
+        userEntity.setFirstName("User");
+        userEntity.setLastName("Test");
+        userEntity.setPassword("password");
+        userEntity.setPhone("phone");
+        userEntity.setRole(Role.USER);
+        userEntity.setImageEntity(imageEntity);
+        userEntity.setEmail("email");
+
         adEntity.setPk(1);
         adEntity.setImageEntity(imageEntity);
         adEntity.setPrice(20);
@@ -48,6 +58,23 @@ public final class EntityInitialization {
         return adEntity;
     }
     public static CommentEntity getCommentEntity() {
+        userEntity.setId(1);
+        userEntity.setUsername("UserTest");
+        userEntity.setFirstName("User");
+        userEntity.setLastName("Test");
+        userEntity.setPassword("password");
+        userEntity.setPhone("phone");
+        userEntity.setRole(Role.USER);
+        userEntity.setImageEntity(imageEntity);
+        userEntity.setEmail("email");
+
+        adEntity.setPk(1);
+        adEntity.setImageEntity(imageEntity);
+        adEntity.setPrice(20);
+        adEntity.setTitle("title");
+        adEntity.setDescription("description");
+        adEntity.setUsersByAuthorId(userEntity);
+
         commentEntity.setPk(2);
         commentEntity.setCreatedAt(Date.valueOf(LocalDate.now()));
         commentEntity.setText("text");

@@ -16,9 +16,11 @@ import ru.skypro.homework.mapper.CommentsMapper;
 import ru.skypro.homework.mapper.CommentsMapperImpl;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.CommentRepository;
+import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.impl.AdServiceImpl;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
 
+import java.security.Principal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
@@ -32,6 +34,8 @@ public class CommentServiceTest {
     private AdRepository adRepositoryMock;
     private AdService adService;
     private CommentRepository commentRepositoryMock;
+    private UserRepository userRepositoryMock;
+    private Principal principalMock;
     private CommentService out;
     private CommentsMapper commentsMapper;
 
@@ -41,13 +45,16 @@ public class CommentServiceTest {
     private  CreateOrUpdateCommentDto createOrUpdateCommentDtoInit;
     private CommentEntity commentEntityInit1;
     private CommentEntity commentEntityInit2;
+
     @BeforeEach
     public void init() {
         commentsMapper = new CommentsMapperImpl();
         adRepositoryMock = mock(AdRepository.class);
         adService = new AdServiceImpl(adRepositoryMock);
         commentRepositoryMock = mock(CommentRepository.class);
-        out = new CommentServiceImpl(adService, commentsMapper, commentRepositoryMock);
+        userRepositoryMock = mock(UserRepository.class);
+        out = new CommentServiceImpl(adService, commentsMapper, commentRepositoryMock, userRepositoryMock);
+        principalMock = mock(Principal.class);
 
         commentEntityInit1 = EntityInitialization.getCommentEntity();
         commentEntityInit2 = EntityInitialization.getCommentEntity();
@@ -62,18 +69,22 @@ public class CommentServiceTest {
     @Test
     public void shouldCorrectResultFromMethodCreateComment() {
         when(adRepositoryMock.findById(anyInt())).thenReturn(Optional.ofNullable(adEntityInit));
+        when(principalMock.getName()).thenReturn("anyString");
+        when(userRepositoryMock.findByUsername(anyString())).thenReturn(user);
         when(commentRepositoryMock.save(any(CommentEntity.class))).thenReturn(any(CommentEntity.class));
 
-        CommentDto actual = out.createComment(adEntityInit.getPk(), createOrUpdateCommentDtoInit);
+        CommentDto actual = out.createComment(adEntityInit.getPk(), createOrUpdateCommentDtoInit, principalMock);
 
         assertNotNull(actual);
-        assertEquals(adEntityInit.getUsersByAuthorId().getId(), actual.getAuthor());
-        assertEquals(adEntityInit.getUsersByAuthorId().getImageEntity().getPath(), actual.getAuthorImage());
-        assertEquals(adEntityInit.getUsersByAuthorId().getFirstName(), actual.getAuthorFirstName());
+        assertEquals(user.getId(), actual.getAuthor());
+        assertEquals(user.getImageEntity().getPath(), actual.getAuthorImage());
+        assertEquals(user.getFirstName(), actual.getAuthorFirstName());
         assertEquals(Date.valueOf(LocalDate.now()), actual.getCreatedAt());
         assertEquals(createOrUpdateCommentDtoInit.getText(), actual.getText());
 
         verify(adRepositoryMock, times(1)).findById(anyInt());
+        verify(principalMock, times(1)).getName();
+        verify(userRepositoryMock, times(1)).findByUsername(anyString());
         verify(commentRepositoryMock, times(1)).save(any(CommentEntity.class));
 
 
@@ -83,7 +94,7 @@ public class CommentServiceTest {
         when(adRepositoryMock.findById(anyInt())).thenThrow(NoSuchElementException.class);
 
         assertThrows(NoSuchElementException.class
-                , ()->out.createComment(1, createOrUpdateCommentDtoInit));
+                , ()->out.createComment(1, createOrUpdateCommentDtoInit, principalMock));
 
         verify(adRepositoryMock, times(1)).findById(anyInt());
         verify(commentRepositoryMock, times(0)).save(any(CommentEntity.class));
@@ -107,7 +118,7 @@ public class CommentServiceTest {
         when(adRepositoryMock.findById(anyInt())).thenThrow(NoSuchElementException.class);
 
         assertThrows(NoSuchElementException.class
-                , ()->out.createComment(1, createOrUpdateCommentDtoInit));
+                , ()->out.getComments(1));
 
         verify(adRepositoryMock, times(1)).findById(anyInt());
     }
