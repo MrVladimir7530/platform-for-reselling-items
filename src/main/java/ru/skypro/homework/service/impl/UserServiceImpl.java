@@ -50,10 +50,13 @@ public class UserServiceImpl implements UserService {
         try {
             changePassword(currentPassword, newPassword);
         } catch (NullPointerException e) {
+            log.error("Error: %s", e);
             return false;
         }
+        log.info("password changed");
         return true;
     }
+
     private void changePassword(String oldPassword, String newPassword) {
         Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
         String name = currentUser.getName();
@@ -71,6 +74,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getInfoUser(Principal principal) {
         String name = principal.getName();
         UserEntity user = userRepository.findByUsername(name);
+        log.info("information received successfully");
         return instance.toUserDto(user);
     }
 
