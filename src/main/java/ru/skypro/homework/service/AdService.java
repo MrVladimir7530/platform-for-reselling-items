@@ -23,9 +23,7 @@ public interface AdService {
 
     Boolean deleteAd(Integer adId);
 
-    AdDto updateInfoAboutAd(PropertiesDto propertiesDto);
-
-    AdsDto getAdAuthorizedUser();
+    AdDto editAd(Integer id, PropertiesDto propertiesDto);
 
 
     //todo дописать обновление картинки
