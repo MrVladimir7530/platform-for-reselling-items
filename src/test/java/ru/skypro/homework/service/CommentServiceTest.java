@@ -16,6 +16,7 @@ import ru.skypro.homework.mapper.CommentsMapper;
 import ru.skypro.homework.mapper.CommentsMapperImpl;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.CommentRepository;
+import ru.skypro.homework.repository.ImagesRepository;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.impl.AdServiceImpl;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
@@ -38,6 +39,7 @@ public class CommentServiceTest {
     private Principal principalMock;
     private CommentService out;
     private CommentsMapper commentsMapper;
+    private  ImagesRepository imagesRepository;
 
     private  AdEntity adEntityInit;
     private  UserEntity user;
@@ -52,7 +54,7 @@ public class CommentServiceTest {
         adRepositoryMock = mock(AdRepository.class);
         commentRepositoryMock = mock(CommentRepository.class);
         userRepositoryMock = mock(UserRepository.class);
-        adService = new AdServiceImpl(userRepositoryMock, adRepositoryMock);
+        adService = new AdServiceImpl(userRepositoryMock, adRepositoryMock, imagesRepository);
         out = new CommentServiceImpl(adService, commentsMapper, commentRepositoryMock, userRepositoryMock);
         principalMock = mock(Principal.class);
 
