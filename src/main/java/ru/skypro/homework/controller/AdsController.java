@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.service.AdService;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.NoSuchElementException;
@@ -40,8 +41,8 @@ public class AdsController {
      * @return ResponseEntity<AdDto>
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<AdDto> createAd(@RequestBody PropertiesDto properties
-            , @RequestParam MultipartFile image, Principal principal) {
+    public ResponseEntity<AdDto> createAd(@RequestPart("properties") @Valid PropertiesDto properties
+            , @RequestPart("image") MultipartFile image, Principal principal) {
         try {
             AdDto adDto = adService.addNewAd(properties, image, principal);
             return ResponseEntity.ok(adDto);
