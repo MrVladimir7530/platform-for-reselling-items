@@ -97,7 +97,7 @@ public class AdsController {
      * @param id
      * @return ResponseEntity<HttpStatus>
      */
-    @PreAuthorize("@checkAccess.isAdminOrOwnerAd(id, authentication)")
+    @PreAuthorize("@checkAccess.isAdminOrOwnerAd(#id, authentication)")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAd(@PathVariable Integer id) {
         try {
