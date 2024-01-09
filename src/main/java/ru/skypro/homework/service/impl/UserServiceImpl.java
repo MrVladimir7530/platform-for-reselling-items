@@ -98,9 +98,10 @@ public class UserServiceImpl implements UserService {
         UserEntity user = userRepository.findByUsername(name);
 
         ImageEntity image = user.getImageEntity();
-        boolean isEmptyImage = image == null;
-        if (isEmptyImage) {
+        if (image == null) {
             image = new ImageEntity();
+        } else {
+            imagesRepository.delete(image);
         }
 
         String originalFilename = fileImage.getOriginalFilename();
@@ -117,10 +118,9 @@ public class UserServiceImpl implements UserService {
 
         imagesRepository.save(image);
 
-        if (isEmptyImage) {
-            user.setImageEntity(image);
-            userRepository.save(user);
-        }
+        user.setImageEntity(image);
+        userRepository.save(user);
+
         log.info("The avatar is saved in repository");
         return path.toString();
     }

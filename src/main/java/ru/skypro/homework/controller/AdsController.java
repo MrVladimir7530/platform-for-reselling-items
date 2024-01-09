@@ -49,7 +49,6 @@ public class AdsController {
         } catch (IOException e) {
             return ResponseEntity.badRequest().build();
         }
-        //todo не работает
     }
 
     /**
@@ -87,8 +86,8 @@ public class AdsController {
      * @param image
      * @return ResponseEntity<CreateOrUpdateAdDto
      */
-    @PatchMapping("/{id}/image" )
-    public ResponseEntity<PropertiesDto> editAdImage(@PathVariable Integer adId
+    @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<byte[]> editAdImage(@PathVariable Integer adId
             , @RequestParam MultipartFile image) {
         return null;
     }
