@@ -60,6 +60,22 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
+    public AdsDto getAllAds() {
+
+        List<AdEntity> result = adRepository.findAll();
+        AdsDto adsDto = new AdsDto();
+        List<AdDto> adDtoList = new ArrayList<>();
+        for (AdEntity adEntity : result) {
+            AdDto adDto = instance.adEntityToAdDto(adEntity);
+            adDtoList.add(adDto);
+        }
+
+        adsDto.setResults(adDtoList);
+        adsDto.setCount(adDtoList.size());
+        return adsDto;
+    }
+
+    @Override
     public AdDto addNewAd(PropertiesDto propertiesDto, MultipartFile image, Principal principal) throws IOException {
         UserEntity user = getUser(principal);
 

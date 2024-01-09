@@ -15,6 +15,7 @@ public interface AdService {
     AdEntity findById(Integer id);
 
     AdsDto getMyAds(Principal principal);
+    AdsDto getAllAds();
 
     AdDto addNewAd(PropertiesDto propertiesDto, MultipartFile image, Principal principal) throws IOException;
 
@@ -25,6 +26,7 @@ public interface AdService {
     AdDto updateInfoAboutAd(PropertiesDto propertiesDto);
 
     AdsDto getAdAuthorizedUser();
+
 
     //todo дописать обновление картинки
 }

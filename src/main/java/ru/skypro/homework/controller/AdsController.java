@@ -57,7 +57,8 @@ public class AdsController {
      */
     @GetMapping
     public ResponseEntity<AdsDto> getAllAds() {
-        return null;
+        adService.getAllAds();
+        return ResponseEntity.status(HttpStatus.OK).body(adService.getAllAds());
     }
 
     /**
