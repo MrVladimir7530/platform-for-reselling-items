@@ -75,7 +75,7 @@ public class AdServiceImpl implements AdService {
 
         imageEntity.setPath(path.toString());
         imageEntity.setContentType(image.getContentType());
-        imageEntity.setSize(imageEntity.getSize());
+        imageEntity.setSize(image.getSize());
 
         imagesRepository.save(imageEntity);
         log.info("The avatar is saved in repository");

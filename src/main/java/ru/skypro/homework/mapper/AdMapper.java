@@ -22,8 +22,9 @@ public interface AdMapper {
     @Mapping(target = "description", source = "propertiesDto.description")
     @Mapping(target = "price", source = "propertiesDto.price")
     @Mapping(target = "usersByAuthorId", source = "userEntity")
+    @Mapping(target = "imageEntity", source = "imageEntity")
     AdEntity propertiesDtoAndUserEntityAndStringImageToAdEntity(UserEntity userEntity
-            , PropertiesDto propertiesDto, ImageEntity image);
+            , PropertiesDto propertiesDto, ImageEntity imageEntity);
 
 
     @Mapping(target = "authorLastName", source = "userEntity.lastName")
