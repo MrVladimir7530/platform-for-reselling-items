@@ -142,6 +142,7 @@ public class AdServiceImpl implements AdService {
         imageEntity.setSize(image.getSize());
         imageEntity.setPath(path.toString());
         imageEntity.setContentType(image.getContentType());
+        imagesRepository.save(imageEntity);
 
         adEntity.setImageEntity(imageEntity);
         adRepository.save(adEntity);
