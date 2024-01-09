@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.security.Principal;
+import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
@@ -103,7 +104,7 @@ public class UserServiceImpl implements UserService {
         }
 
         String originalFilename = fileImage.getOriginalFilename();
-        Path path = Path.of(avatarPath, UUID.randomUUID() + "." + getExtension(originalFilename));
+        Path path = Path.of(avatarPath, user.getUsername() + "." + getExtension(Objects.requireNonNull(originalFilename)));
 
         Files.createDirectories(path.getParent());
         Files.deleteIfExists(path);

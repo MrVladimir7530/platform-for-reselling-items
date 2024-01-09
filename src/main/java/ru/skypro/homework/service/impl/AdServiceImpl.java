@@ -137,16 +137,14 @@ public class AdServiceImpl implements AdService {
         Path path = Path.of(avatarPath, UUID.randomUUID() + "." + getExtension(originalFilename));
 
         readAndWriteInTheDirectory(image, path);
-        ImageEntity imageEntity = new ImageEntity();
+        ImageEntity imageEntity = adEntity.getImageEntity();
 
         imageEntity.setSize(image.getSize());
         imageEntity.setPath(path.toString());
         imageEntity.setContentType(image.getContentType());
         imagesRepository.save(imageEntity);
 
-        adEntity.setImageEntity(imageEntity);
-        adRepository.save(adEntity);
-        imagesRepository.deleteById(adEntity.getImageEntity().getId());
+        imagesRepository.save(imageEntity);
 
         return image.getBytes();
     }

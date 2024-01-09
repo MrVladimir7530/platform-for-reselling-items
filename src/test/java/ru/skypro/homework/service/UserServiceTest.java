@@ -91,7 +91,7 @@ public class UserServiceTest {
         userDto.setLastName(lastName);
         userDto.setPhone(phone);
 
-        UpdateUserDto userDtoResult = userService.updateInfoUser(new UpdateUserDto(), principal);
+        UpdateUserDto userDtoResult = userService.updateInfoUser(userDto, principal);
 
         assertEquals(userDto, userDtoResult);
     }
