@@ -83,15 +83,13 @@ public class UserServiceImpl implements UserService {
         String name = principal.getName();
         UserEntity user = userRepository.findByUsername(name);
 
-        UpdateUserDto oldUserDto = instance.toUpdateUserDto(user);
-
         user.setFirstName(updateUserDto.getFirstName());
         user.setLastName(updateUserDto.getLastName());
         user.setPhone(updateUserDto.getPhone());
 
         log.info("User information has been changed");
         userRepository.save(user);
-        return oldUserDto;
+        return updateUserDto;
     }
 
     @Override
@@ -100,9 +98,10 @@ public class UserServiceImpl implements UserService {
         UserEntity user = userRepository.findByUsername(name);
 
         ImageEntity image = user.getImageEntity();
-        boolean isEmptyImage = image == null;
-        if (isEmptyImage) {
+        if (image == null) {
             image = new ImageEntity();
+        } else {
+            imagesRepository.delete(image);
         }
 
         String originalFilename = fileImage.getOriginalFilename();
@@ -119,10 +118,9 @@ public class UserServiceImpl implements UserService {
 
         imagesRepository.save(image);
 
-        if (isEmptyImage) {
-            user.setImageEntity(image);
-            userRepository.save(user);
-        }
+        user.setImageEntity(image);
+        userRepository.save(user);
+
         log.info("The avatar is saved in repository");
         return path.toString();
     }

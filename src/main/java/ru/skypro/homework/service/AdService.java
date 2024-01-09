@@ -25,6 +25,5 @@ public interface AdService {
 
     AdDto editAd(Integer id, PropertiesDto propertiesDto);
 
-
-    //todo дописать обновление картинки
+    byte[] updateImageInAd(MultipartFile image, Integer adId) throws IOException;
 }

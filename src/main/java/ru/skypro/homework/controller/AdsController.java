@@ -1,9 +1,5 @@
 package ru.skypro.homework.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.service.AdService;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.NoSuchElementException;
@@ -60,15 +57,14 @@ public class AdsController {
             }, tags = "Объявления"
     )
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<AdDto> createAd(@RequestBody PropertiesDto properties
-            , @RequestParam MultipartFile image, Principal principal) {
+    public ResponseEntity<AdDto> createAd(@RequestPart("properties") @Valid PropertiesDto properties
+            , @RequestPart("image") MultipartFile image, Principal principal) {
         try {
             AdDto adDto = adService.addNewAd(properties, image, principal);
             return ResponseEntity.ok(adDto);
         } catch (IOException e) {
             return ResponseEntity.badRequest().build();
         }
-        //todo не работает
     }
 
     @Operation(summary = "Получить все объявления",
@@ -143,10 +139,17 @@ public class AdsController {
                     )
             }, tags = "Объявления"
     )
-    @PatchMapping("/{id}/image")
-    public ResponseEntity<PropertiesDto> editAdImage(@PathVariable Integer adId
+
+    @PreAuthorize("@checkAccess.isAdminOrOwnerAd(#id, authentication)")
+    @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<byte[]> editAdImage(@PathVariable Integer id
             , @RequestParam MultipartFile image) {
-        return null;
+        try {
+            byte[] bytes = adService.updateImageInAd(image, id);
+            return ResponseEntity.ok(bytes);
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @Operation(summary = "Удаление объявления",
@@ -168,6 +171,10 @@ public class AdsController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
     }
+
+
+
+
 
 
 }
