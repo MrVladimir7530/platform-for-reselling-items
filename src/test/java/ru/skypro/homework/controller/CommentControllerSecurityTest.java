@@ -29,6 +29,7 @@ import ru.skypro.homework.initialization.EntityInitialization;
 import ru.skypro.homework.mapper.CommentsMapper;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.CommentRepository;
+import ru.skypro.homework.repository.ImagesRepository;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.impl.AdServiceImpl;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
@@ -40,6 +41,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -58,6 +60,8 @@ public class CommentControllerSecurityTest {
     private UserRepository userRepositoryMock;
     @MockBean
     private CommentsMapper commentsMapperMock;
+    @MockBean
+    private ImagesRepository imagesRepository;
     @MockBean
     private CommentRepository commentRepositoryMock;
     @SpyBean
@@ -113,6 +117,7 @@ public class CommentControllerSecurityTest {
 
         mvc.perform(MockMvcRequestBuilders
                         .post("/ads/1/comments")
+                        .with(csrf())
                         .content(createOrUpdateCommentDto.toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -141,6 +146,7 @@ public class CommentControllerSecurityTest {
 
         mvc.perform(MockMvcRequestBuilders
                         .post("/ads/1/comments")
+                        .with(csrf())
                         .content(createOrUpdateCommentDto.toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -166,6 +172,7 @@ public class CommentControllerSecurityTest {
 
         mvc.perform(MockMvcRequestBuilders
                         .patch("/ads/1/comments/1")
+                        .with(csrf())
                         .content(createOrUpdateCommentDto.toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -189,6 +196,7 @@ public class CommentControllerSecurityTest {
 
         mvc.perform(MockMvcRequestBuilders
                         .get("/ads/1/comments")
+                        .with(csrf())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.count").value(adEntityInit.getComments().size()));
@@ -205,7 +213,8 @@ public class CommentControllerSecurityTest {
         doNothing().when(commentRepositoryMock).deleteById(anyInt());
 
         mvc.perform(MockMvcRequestBuilders
-                        .delete("/ads/1/comments/1"))
+                        .delete("/ads/1/comments/1")
+                .with(csrf()))
                 .andExpect(status().isOk());
 
         verify(commentRepositoryMock, times(1)).deleteById(anyInt());

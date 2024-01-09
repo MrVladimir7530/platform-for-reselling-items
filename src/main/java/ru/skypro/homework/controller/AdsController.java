@@ -1,5 +1,9 @@
 package ru.skypro.homework.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,23 +28,38 @@ import java.util.NoSuchElementException;
 public class AdsController {
     private final AdService adService;
 
-    /**
-     * Получение всех объявлений
-     * @return ResponseEntity<AdsDto>
-     */
+    @Operation(summary = "Получить объявление авторизированного пользователя",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Получить объявление авторизированного пользователя",
+                            content = {
+                                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(implementation = AdsDto.class)
+                                    )
+                            }
+                    )
+            }, tags = "Объявления"
+    )
     @GetMapping("/me")
     public ResponseEntity<AdsDto> getMyAds(Principal principal) {
         AdsDto allAds = adService.getMyAds(principal);
         return ResponseEntity.ok(allAds);
     }
 
-    /**
-     * Создание объявленияю Аргументы: CreateOrUpdateAdDto(title-заголовок объявления,
-     * price - цена объявления, description - описание объявления), image - изображение
-     * @param properties
-     * @param image
-     * @return ResponseEntity<AdDto>
-     */
+    @Operation(summary = "Создать объявление",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Созданное объявление",
+                            content = {
+                                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(implementation = AdDto.class)
+                                    )
+                            }
+                    )
+            }, tags = "Объявления"
+    )
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<AdDto> createAd(@RequestPart("properties") @Valid PropertiesDto properties
             , @RequestPart("image") MultipartFile image, Principal principal) {
@@ -52,21 +71,38 @@ public class AdsController {
         }
     }
 
-    /**
-     * Получение объявлений авторизованного пользователя
-     * @return ResponseEntity<AdsDto>
-     */
+    @Operation(summary = "Получить все объявления",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Получить все объявления",
+                            content = {
+                                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(implementation = AdsDto.class)
+                                    )
+                            }
+                    )
+            }, tags = "Объявления"
+    )
     @GetMapping
     public ResponseEntity<AdsDto> getAllAds() {
         AdsDto allAds = adService.getAllAds();
         return ResponseEntity.status(HttpStatus.OK).body(allAds);
     }
 
-    /**
-     * Получение информации об объявлении
-     * @param id
-     * @return ResponseEntity<ExtendedAdDto>
-     */
+    @Operation(summary = "Получить информацию об объявлении",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Получить информацию об объявлении",
+                            content = {
+                                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(implementation = ExtendedAdDto.class)
+                                    )
+                            }
+                    )
+            }, tags = "Объявления"
+    )
     @GetMapping("/{id}")
     public ResponseEntity<ExtendedAdDto> getAdInfo(@PathVariable Integer id) {
         log.info("Was invoked method for get of info about Ad in CommentController");
@@ -74,22 +110,40 @@ public class AdsController {
         return ResponseEntity.status(HttpStatus.OK).body(extendedAdDto);
     }
 
-    /**
-     * Обновление информации об объявлении
-     * @param adId
-     * @return ResponseEntity<CreateOrUpdateAdDto>
-     */
+    @Operation(summary = "Обновление информации об объявлении",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Обновление информации об объявлении",
+                            content = {
+                                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(implementation = AdDto.class)
+                                    )
+                            }
+                    )
+            }, tags = "Объявления"
+    )
+    @PreAuthorize("@checkAccess.isAdminOrOwnerAd(#id, authentication)")
     @PatchMapping("/{id}")
-    public ResponseEntity<PropertiesDto> editAd(@PathVariable Integer adId) {
-        return null;
+    public ResponseEntity<AdDto> editAd(@PathVariable Integer id, @RequestBody PropertiesDto propertiesDto) {
+        AdDto adDto = adService.editAd(id, propertiesDto);
+        return ResponseEntity.status(HttpStatus.OK).body(adDto);
     }
 
-    /**
-     * Обновление картинки объявления
-     * @param id
-     * @param image
-     * @return ResponseEntity<CreateOrUpdateAdDto
-     */
+    @Operation(summary = "Обновление картинки объявления",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Обновление картинки объявления",
+                            content = {
+                                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                            schema = @Schema(implementation = ExtendedAdDto.class)
+                                    )
+                            }
+                    )
+            }, tags = "Объявления"
+    )
+
     @PreAuthorize("@checkAccess.isAdminOrOwnerAd(#id, authentication)")
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<byte[]> editAdImage(@PathVariable Integer id
@@ -102,11 +156,15 @@ public class AdsController {
         }
     }
 
-    /**
-     * Удаление объявления по Id
-     * @param id
-     * @return ResponseEntity<HttpStatus>
-     */
+    @Operation(summary = "Удаление объявления",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Удаление объявления"
+
+                    )
+            }, tags = "Объявления"
+    )
     @PreAuthorize("@checkAccess.isAdminOrOwnerAd(#id, authentication)")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAd(@PathVariable Integer id) {
@@ -117,6 +175,10 @@ public class AdsController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
     }
+
+
+
+
 
 
 }

@@ -119,13 +119,14 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public AdDto updateInfoAboutAd(PropertiesDto propertiesDto) {
-        return null;
-    }
+    public AdDto editAd(Integer id, PropertiesDto propertiesDto) {
+        AdEntity adEntity = findById(id);
+        adEntity.setTitle(propertiesDto.getTitle());
+        adEntity.setPrice(propertiesDto.getPrice());
+        adEntity.setDescription(propertiesDto.getDescription());
+        adRepository.save(adEntity);
 
-    @Override
-    public AdsDto getAdAuthorizedUser() {
-        return null;
+        return instance.adEntityToAdDto(adEntity);
     }
 
     @Override
