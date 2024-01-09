@@ -23,8 +23,10 @@ import java.util.NoSuchElementException;
 @RequestMapping("/ads")
 public class AdsController {
     private final AdService adService;
+
     /**
      * Получение всех объявлений
+     *
      * @return ResponseEntity<AdsDto>
      */
     @GetMapping()
@@ -36,6 +38,7 @@ public class AdsController {
     /**
      * Создание объявленияю Аргументы: CreateOrUpdateAdDto(title-заголовок объявления,
      * price - цена объявления, description - описание объявления), image - изображение
+     *
      * @param properties
      * @param image
      * @return ResponseEntity<AdDto>
@@ -53,6 +56,7 @@ public class AdsController {
 
     /**
      * Получение объявлений авторизованного пользователя
+     *
      * @return ResponseEntity<AdsDto>
      */
     @GetMapping("/me")
@@ -62,6 +66,7 @@ public class AdsController {
 
     /**
      * Получение информации об объявлении
+     *
      * @param adId
      * @return ResponseEntity<ExtendedAdDto>
      */
@@ -72,6 +77,7 @@ public class AdsController {
 
     /**
      * Обновление информации об объявлении
+     *
      * @param adId
      * @return ResponseEntity<CreateOrUpdateAdDto>
      */
@@ -82,18 +88,26 @@ public class AdsController {
 
     /**
      * Обновление картинки объявления
-     * @param adId
+     *
+     * @param id
      * @param image
      * @return ResponseEntity<CreateOrUpdateAdDto
      */
-    @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<byte[]> editAdImage(@PathVariable Integer adId
+    @PreAuthorize("@checkAccess.isAdminOrOwnerAd(#id, authentication)")
+    @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<byte[]> editAdImage(@PathVariable Integer id
             , @RequestParam MultipartFile image) {
-        return null;
+        try {
+            byte[] bytes = adService.updateImageInAd(image, id);
+            return ResponseEntity.ok(bytes);
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     /**
      * Удаление объявления по Id
+     *
      * @param id
      * @return ResponseEntity<HttpStatus>
      */
@@ -107,10 +121,6 @@ public class AdsController {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
     }
-
-
-
-
 
 
 }
