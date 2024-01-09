@@ -83,15 +83,13 @@ public class UserServiceImpl implements UserService {
         String name = principal.getName();
         UserEntity user = userRepository.findByUsername(name);
 
-        UpdateUserDto oldUserDto = instance.toUpdateUserDto(user);
-
         user.setFirstName(updateUserDto.getFirstName());
         user.setLastName(updateUserDto.getLastName());
         user.setPhone(updateUserDto.getPhone());
 
         log.info("User information has been changed");
         userRepository.save(user);
-        return oldUserDto;
+        return updateUserDto;
     }
 
     @Override
