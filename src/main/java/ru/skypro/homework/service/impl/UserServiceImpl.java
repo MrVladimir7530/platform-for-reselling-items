@@ -100,8 +100,6 @@ public class UserServiceImpl implements UserService {
         ImageEntity image = user.getImageEntity();
         if (image == null) {
             image = new ImageEntity();
-        } else {
-            imagesRepository.delete(image);
         }
 
         String originalFilename = fileImage.getOriginalFilename();
