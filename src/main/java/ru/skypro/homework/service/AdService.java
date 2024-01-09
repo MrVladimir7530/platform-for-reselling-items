@@ -14,11 +14,11 @@ public interface AdService {
 
     AdEntity findById(Integer id);
 
-    AdsDto getAllAds(Principal principal);
+    AdsDto getMyAds(Principal principal);
 
     AdDto addNewAd(PropertiesDto propertiesDto, MultipartFile image, Principal principal) throws IOException;
 
-    ExtendedAdDto getInfoAboutAdd(Integer adId);
+    ExtendedAdDto getInfoAboutAd(Integer adId);
 
     Boolean deleteAd(Integer adId);
 

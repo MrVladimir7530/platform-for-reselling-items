@@ -43,7 +43,7 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public AdsDto getAllAds(Principal principal) {
+    public AdsDto getMyAds(Principal principal) {
         UserEntity user = getUser(principal);
 
         List<AdEntity> result = adRepository.findByUsersByAuthorId(user);
@@ -87,8 +87,11 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public ExtendedAdDto getInfoAboutAdd(Integer adId) {
-        return null;
+    public ExtendedAdDto getInfoAboutAd(Integer id) {
+        AdEntity adEntity = findById(id);
+        UserEntity user = adEntity.getUsersByAuthorId();
+        instance.adEntityAndUserEntityToExtendedAdDto(user, adEntity);
+        return instance.adEntityAndUserEntityToExtendedAdDto(user, adEntity);
     }
 
     @Override

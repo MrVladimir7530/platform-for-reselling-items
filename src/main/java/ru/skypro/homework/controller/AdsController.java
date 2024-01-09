@@ -26,9 +26,9 @@ public class AdsController {
      * Получение всех объявлений
      * @return ResponseEntity<AdsDto>
      */
-    @GetMapping()
-    public ResponseEntity<AdsDto> getAds(Principal principal) {
-        AdsDto allAds = adService.getAllAds(principal);
+    @GetMapping("/me")
+    public ResponseEntity<AdsDto> getMyAds(Principal principal) {
+        AdsDto allAds = adService.getMyAds(principal);
         return ResponseEntity.ok(allAds);
     }
 
@@ -55,19 +55,21 @@ public class AdsController {
      * Получение объявлений авторизованного пользователя
      * @return ResponseEntity<AdsDto>
      */
-    @GetMapping("/me")
-    public ResponseEntity<AdsDto> getMyAds() {
+    @GetMapping
+    public ResponseEntity<AdsDto> getAllAds() {
         return null;
     }
 
     /**
      * Получение информации об объявлении
-     * @param adId
+     * @param id
      * @return ResponseEntity<ExtendedAdDto>
      */
     @GetMapping("/{id}")
-    public ResponseEntity<ExtendedAdDto> getAdInfo(@PathVariable Integer adId) {
-        return null;
+    public ResponseEntity<ExtendedAdDto> getAdInfo(@PathVariable Integer id) {
+        log.info("Was invoked method for get of info about Ad in CommentController");
+        ExtendedAdDto extendedAdDto = adService.getInfoAboutAd(id);
+        return ResponseEntity.status(HttpStatus.OK).body(extendedAdDto);
     }
 
     /**
@@ -97,7 +99,7 @@ public class AdsController {
      * @param id
      * @return ResponseEntity<HttpStatus>
      */
-    @PreAuthorize("@checkAccess.isAdminOrOwnerAd(id, authentication)")
+    @PreAuthorize("@checkAccess.isAdminOrOwnerAd(#id, authentication)")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAd(@PathVariable Integer id) {
         try {
