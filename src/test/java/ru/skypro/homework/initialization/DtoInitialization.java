@@ -4,7 +4,6 @@ import ru.skypro.homework.dto.AdDto;
 import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.dto.CreateOrUpdateCommentDto;
 import ru.skypro.homework.dto.PropertiesDto;
-import ru.skypro.homework.entity.AdEntity;
 
 import java.sql.Date;
 import java.time.LocalDate;
