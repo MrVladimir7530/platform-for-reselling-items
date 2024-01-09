@@ -27,6 +27,5 @@ public interface AdService {
 
     AdsDto getAdAuthorizedUser();
 
-
-    //todo дописать обновление картинки
+    byte[] updateImageInAd(MultipartFile image, Integer adId) throws IOException;
 }
