@@ -1,47 +1,35 @@
 package ru.skypro.homework.service.impl;
 
-import liquibase.pro.packaged.B;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.config.AppUserDetailsManager;
 import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UpdateUserDto;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.entity.ImageEntity;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.mapper.UserMapper;
-import ru.skypro.homework.repository.ImagesRepository;
 import ru.skypro.homework.repository.UserRepository;
+import ru.skypro.homework.service.ImageService;
 import ru.skypro.homework.service.UserService;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.security.Principal;
-import java.util.Objects;
-import java.util.UUID;
+
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     UserMapper instance = Mappers.getMapper(UserMapper.class);
-    @Value("${path.to.avatars.folder}")
-    private String avatarPath;
     private final UserRepository userRepository;
-    private final ImagesRepository imagesRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final ImageService imageService;
 
     @Override
     public boolean setPassword(NewPasswordDto newPasswordDto) {
@@ -99,43 +87,19 @@ public class UserServiceImpl implements UserService {
         UserEntity user = userRepository.findByUsername(name);
 
         ImageEntity image = user.getImageEntity();
+        ImageEntity imageEntity;
+
         if (image == null) {
-            image = new ImageEntity();
+            imageEntity = imageService.saveImage(fileImage);
+        } else {
+            imageEntity = imageService.updateImage(fileImage, image.getId());
         }
 
-        String originalFilename = fileImage.getOriginalFilename();
-        Path path = Path.of(avatarPath, user.getUsername() + "." + getExtension(Objects.requireNonNull(originalFilename)));
-
-        Files.createDirectories(path.getParent());
-        Files.deleteIfExists(path);
-
-        readAndWriteInTheDirectory(fileImage, path);
-
-        image.setPath(path.toString());
-        image.setContentType(fileImage.getContentType());
-        image.setSize(fileImage.getSize());
-
-        imagesRepository.save(image);
-
-        user.setImageEntity(image);
+        user.setImageEntity(imageEntity);
         userRepository.save(user);
 
         log.info("The avatar is saved in repository");
-        return path.toString();
+        return imageEntity.getPath();
     }
 
-    private void readAndWriteInTheDirectory(MultipartFile fileImage, Path path) throws IOException {
-        try (
-                InputStream inputStream = fileImage.getInputStream();
-                OutputStream outputStream = Files.newOutputStream(path, StandardOpenOption.CREATE_NEW);
-                BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream, 4096);
-                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream, 4096);
-        ) {
-            bufferedInputStream.transferTo(bufferedOutputStream);
-        }
-    }
-
-    private String getExtension(String fileName) {
-        return fileName.substring(fileName.lastIndexOf(".") + 1);
-    }
 }
