@@ -26,6 +26,7 @@ public class WebSecurityConfig {
             "/login",
             "/register",
             "/ads",
+            "/C**"
 
     };
 

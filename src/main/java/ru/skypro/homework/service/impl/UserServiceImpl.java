@@ -64,7 +64,12 @@ public class UserServiceImpl implements UserService {
         String name = principal.getName();
         UserEntity user = userRepository.findByUsername(name);
         log.info("information received successfully");
-        return instance.toUserDto(user);
+        UserDto userDto = instance.toUserDto(user);
+        ImageEntity imageEntity = user.getImageEntity();
+        if (imageEntity != null) {
+            userDto.setImage("/" + imageEntity.getPath());
+        }
+        return userDto;
     }
 
     @Override

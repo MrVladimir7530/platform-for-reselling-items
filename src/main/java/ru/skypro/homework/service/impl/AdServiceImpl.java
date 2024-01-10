@@ -47,6 +47,7 @@ public class AdServiceImpl implements AdService {
         List<AdDto> adDtoList = new ArrayList<>();
         for (AdEntity adEntity : result) {
             AdDto adDto = instance.adEntityToAdDto(adEntity);
+            adDto.setImage("/" + adEntity.getImageEntity().getPath());
             adDtoList.add(adDto);
         }
 
@@ -57,12 +58,12 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public AdsDto getAllAds() {
-
         List<AdEntity> result = adRepository.findAll();
         AdsDto adsDto = new AdsDto();
         List<AdDto> adDtoList = new ArrayList<>();
         for (AdEntity adEntity : result) {
             AdDto adDto = instance.adEntityToAdDto(adEntity);
+            adDto.setImage("/" + adEntity.getImageEntity().getPath());
             adDtoList.add(adDto);
         }
 
@@ -88,8 +89,9 @@ public class AdServiceImpl implements AdService {
     public ExtendedAdDto getInfoAboutAd(Integer id) {
         AdEntity adEntity = findById(id);
         UserEntity user = adEntity.getUsersByAuthorId();
-        instance.adEntityAndUserEntityToExtendedAdDto(user, adEntity);
-        return instance.adEntityAndUserEntityToExtendedAdDto(user, adEntity);
+        ExtendedAdDto extendedAdDto = instance.adEntityAndUserEntityToExtendedAdDto(user, adEntity);
+        extendedAdDto.setImage("/" + adEntity.getImageEntity().getPath());
+        return extendedAdDto;
     }
 
     @Override
@@ -108,7 +110,9 @@ public class AdServiceImpl implements AdService {
         adEntity.setDescription(propertiesDto.getDescription());
         adRepository.save(adEntity);
 
-        return instance.adEntityToAdDto(adEntity);
+        AdDto adDto = instance.adEntityToAdDto(adEntity);
+        adDto.setImage("/"+ adEntity.getImageEntity().getPath());
+        return adDto;
     }
 
     @Override

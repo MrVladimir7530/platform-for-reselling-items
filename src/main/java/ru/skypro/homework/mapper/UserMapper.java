@@ -12,8 +12,9 @@ import ru.skypro.homework.entity.UserEntity;
 @Mapper
 public interface UserMapper {
 
-    @Mapping(target = "image", source = "imageEntity.path")
+    @Mapping(target = "image", source ="imageEntity.path")
     UserDto toUserDto(UserEntity user);
+
     UpdateUserDto toUpdateUserDto(UserEntity user);
 
     @Mapping(target = "password", ignore = true)

@@ -42,11 +42,16 @@ public class ImageServiceImpl implements ImageService {
     public ImageEntity updateImage(MultipartFile imageFile, Integer imageId) throws IOException {
         ImageEntity image = getImage(imageId);
 
-        Path path = Path.of(avatarPath, image.getPath());
+        Path path = Path.of(image.getPath());
         Files.deleteIfExists(path);
 
-        createNewPathAndSaveFile(imageFile, image);
-        return image;
+        ImageEntity newPathAndSaveFile = createNewPathAndSaveFile(imageFile, image);
+        return getSave(newPathAndSaveFile);
+    }
+
+    @Override
+    public byte[] getByteFromFile(String path) throws IOException {
+       return Files.readAllBytes(Path.of(avatarPath, path));
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
@@ -54,23 +59,21 @@ public class ImageServiceImpl implements ImageService {
         return imagesRepository.save(image);
     }
 
-    private String createNewPathAndSaveFile(MultipartFile imageFile, ImageEntity image) throws IOException {
+    private ImageEntity createNewPathAndSaveFile(MultipartFile imageFile, ImageEntity image) throws IOException {
         String originalFilename = imageFile.getOriginalFilename();
 
         String fileName = UUID.randomUUID() + "." + getExtension(Objects.requireNonNull(originalFilename));
         Path path = Path.of(avatarPath, fileName);
 
-
         Files.createDirectories(path.getParent());
-
 
         readAndWriteInTheDirectory(imageFile, path);
 
-        image.setPath(fileName);
+        image.setPath(path.toString());
         image.setContentType(imageFile.getContentType());
         image.setSize(imageFile.getSize());
 
-        return fileName;
+        return image;
     }
 
     private void readAndWriteInTheDirectory(MultipartFile fileImage, Path path) throws IOException {
