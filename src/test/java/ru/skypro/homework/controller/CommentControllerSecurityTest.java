@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -71,7 +72,7 @@ public class CommentControllerSecurityTest {
     private AdRepository adRepositoryMock;
     @SpyBean
     private AdServiceImpl adServiceSpy;
-    @InjectMocks
+    @SpyBean
     private CheckAccess checkAccessSpy;
     @InjectMocks
     private CommentController commentController;
@@ -172,6 +173,7 @@ public class CommentControllerSecurityTest {
     @Test
     @WithMockUser(username = "UserTest")
     public void shouldCorrectResultFromMethodEditCommentWhenUserIsOwner() throws Exception {
+        when(checkAccessSpy.isAdminOrOwnerComment(anyInt(), any(Authentication.class))).thenCallRealMethod();
         when(userRepositoryMock.findByUsername(anyString())).thenReturn(userEntityInit);
         when(commentRepositoryMock.findById(anyInt())).thenReturn(Optional.of(commentEntityInit));
         when(commentRepositoryMock.save(any(CommentEntity.class))).thenReturn(commentEntityInit);
@@ -239,7 +241,6 @@ public class CommentControllerSecurityTest {
     }
     @Test
     @WithMockUser(username = "UserTest")
-    //todo поправить тест
     public void shouldCorrectResultFromMethodDeleteComment() throws Exception {
         when(userRepositoryMock.findByUsername(anyString())).thenReturn(userEntityInit);
         when(commentRepositoryMock.findById(anyInt())).thenReturn(Optional.of(commentEntityInit));
